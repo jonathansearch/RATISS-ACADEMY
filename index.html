@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RATISS Academy — Portail</title>
+<style>
+  :root{--bg:#0a0e15;--card:#121a26;--line:#1f2b3d;--txt:#e9f0fa;--dim:#93a6bf;--soft:#6d809b;
+        --neon:#39e08f;--cyan:#4cc9f0;--amber:#ffb547;
+        --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font-size:17px;line-height:1.7;
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background-image:radial-gradient(800px 400px at 12% -5%,rgba(57,224,143,.08),transparent 65%),
+                        radial-gradient(800px 500px at 92% 0%,rgba(76,201,240,.08),transparent 65%)}
+  .wrap{max-width:920px;margin:0 auto;padding:44px 20px 70px}
+  .brand{font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;color:var(--neon);text-transform:uppercase}
+  h1{font-size:clamp(28px,5vw,46px);line-height:1.1;margin:.3em 0 .2em;letter-spacing:-.025em}
+  .sub{color:var(--dim);max-width:62ch}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:34px}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  a.card{display:block;text-decoration:none;color:inherit;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+        border:1px solid var(--line);border-radius:18px;padding:22px;transition:.18s}
+  a.card:hover{border-color:rgba(57,224,143,.45);transform:translateY(-2px);
+        box-shadow:0 20px 40px -28px #000}
+  a.card.soon{opacity:.55;pointer-events:none}
+  .ico{font-size:26px}
+  .card h2{font-size:19px;margin:.5em 0 .25em;letter-spacing:-.01em}
+  .card p{margin:0;font-size:14.5px;color:var(--dim)}
+  .badge{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+         padding:3px 9px;border-radius:999px;margin-top:14px;text-transform:uppercase}
+  .b-ok{color:var(--neon);border:1px solid rgba(57,224,143,.4);background:rgba(57,224,143,.08)}
+  .b-soon{color:var(--soft);border:1px solid var(--line);background:#0e1620}
+  .b-now{color:var(--amber);border:1px solid rgba(255,181,71,.4);background:rgba(255,181,71,.08)}
+  .rules{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:38px}
+  @media(max-width:720px){.rules{grid-template-columns:1fr}}
+  .box{background:#0d141d;border:1px solid var(--line);border-radius:16px;padding:18px}
+  .box h3{margin:0 0 .5em;font-size:15px;color:var(--cyan)}
+  .box ul{margin:0;padding-left:20px;font-size:14.5px;color:var(--dim)}
+  .box li{margin:.25em 0}
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);
+         font-family:var(--mono);font-size:11.5px;color:#5a6b83;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">RATISS Academy · Yaoundé</div>
+  <h1>Apprendre. Construire. Transmettre. 🎓⚡</h1>
+  <p class="sub">Académie technique interne de RATISS Labs. Un seul pilier actif à la fois,
+  l'image avant la formule, et le multimètre comme seul arbitre.</p>
+
+  <div class="grid">
+    <a class="card" href="01-FONDAMENTAUX/001-tension-courant-resistance/index.html">
+      <div class="ico">⚡</div>
+      <h2>Leçon 001 — Les trois mots</h2>
+      <p>Tension, courant, résistance. Niveau zéro. 45 min, interactif, hors-ligne.</p>
+      <span class="badge b-ok">prête · v1.1</span>
+    </a>
+
+    <a class="card soon" href="#">
+      <div class="ico">🔍</div>
+      <h2>Leçon 002 — Circuit ouvert, continuité</h2>
+      <p>Le premier geste du réparateur : vérifier qu'un chemin existe. À écrire après la 1ʳᵉ séance d'atelier.</p>
+      <span class="badge b-soon">en attente du terrain</span>
+    </a>
+
+    <a class="card" href="00-ORIENTATION/PROGRAMME.md">
+      <div class="ico">📘</div>
+      <h2>Programme complet</h2>
+      <p>Les 4 piliers, l'ordre des leçons, les niveaux, le rythme hebdomadaire.</p>
+      <span class="badge b-ok">à lire</span>
+    </a>
+
+    <a class="card" href="00-ORIENTATION/SECURITE.md">
+      <div class="ico">🛑</div>
+      <h2>Sécurité</h2>
+      <p>Ce qui est autorisé seul, ce qui exige le maître. Non négociable.</p>
+      <span class="badge b-now">obligatoire</span>
+    </a>
+
+    <a class="card" href="journal-de-formation/journal.md">
+      <div class="ico">📓</div>
+      <h2>Journal de formation</h2>
+      <p>Deux profils suivis séparément : le fondateur et le collaborateur technique.</p>
+      <span class="badge b-ok">à remplir</span>
+    </a>
+
+    <a class="card" href="GLOSSAIRE-METIER.md">
+      <div class="ico">🔧</div>
+      <h2>Glossaire métier</h2>
+      <p>Le vocabulaire du travail : composants, atelier, datasheet. Pas un cours — une boîte à outils.</p>
+      <span class="badge b-ok">pour les docs</span>
+    </a>
+
+    <a class="card" href="02-PROGRAMMATION-C/README.md">
+      <div class="ico">💻</div>
+      <h2>Programmation C → C++</h2>
+      <p>Démarre à la leçon électro 003 : le code couleur d'une résistance en programme.</p>
+      <span class="badge b-soon">plus tard</span>
+    </a>
+
+    <a class="card" href="03-KICAD/README.md">
+      <div class="ico">🖥️</div>
+      <h2>KiCad</h2>
+      <p>Installer maintenant, étudier quand on saura lire un schéma à la main.</p>
+      <span class="badge b-soon">plus tard</span>
+    </a>
+  </div>
+
+  <div class="rules">
+    <div class="box">
+      <h3>Les 6 règles</h3>
+      <ul>
+        <li>L'image avant la formule</li>
+        <li>Aucun chiffre non calculé</li>
+        <li>Simulation ≠ prototype ≠ PCB</li>
+        <li>Une compétence pratique se valide au réel</li>
+        <li>3 leçons d'avance, pas plus</li>
+        <li>Aucune clé dans le dépôt</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>Le cycle de chaque notion</h3>
+      <ul>
+        <li>Voir → Comprendre → Simuler</li>
+        <li>Calculer → Construire → Mesurer</li>
+        <li>Appliquer sur une vraie carte</li>
+        <li>Puis enseigner à ton collègue</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="box" style="margin-top:24px">
+    <h3>🇬🇧 L'anglais vit ailleurs</h3>
+    <ul>
+      <li>La <b>vraie formation en anglais</b> a son propre dépôt : <b>RATISS-ENGLISH</b>.</li>
+      <li>Leçon E01 « Hello! » déjà disponible.</li>
+      <li>Ici, on ne garde que le <b>vocabulaire du travail</b> pour lire les docs.</li>
+    </ul>
+  </div>
+
+  <footer>
+    RATISS Academy · RATISS Labs · Yaoundé · ouvert le 03/11/2026<br>
+    Fondateur : Jonathan Evina · ORCID 0009-0000-4092-5313<br>
+    Simulation ≠ prototype ≠ mesure réelle. Seul le multimètre arbitre. 🔒
+  </footer>
+</div>
+</body>
+</html>

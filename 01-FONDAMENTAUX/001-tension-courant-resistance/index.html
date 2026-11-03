@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RATISS Academy · Leçon 001 — Tension, courant, résistance</title>
+<style>
+  :root{
+    --bg:#0a0e15; --card:#121a26; --card2:#0d141d; --line:#1f2b3d;
+    --txt:#e9f0fa; --dim:#93a6bf; --soft:#6d809b;
+    --neon:#39e08f; --cyan:#4cc9f0; --amber:#ffb547; --red:#ff6b7d;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:17px; line-height:1.72; padding-bottom:70px;
+    background-image:radial-gradient(800px 400px at 15% -5%,rgba(57,224,143,.07),transparent 65%),
+                     radial-gradient(800px 500px at 95% 0%,rgba(76,201,240,.07),transparent 65%);
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px}
+
+  /* ---------- en-tête ---------- */
+  header{padding:40px 0 8px}
+  .brand{font-family:var(--mono);font-size:11.5px;letter-spacing:.28em;color:var(--neon);text-transform:uppercase}
+  h1{font-size:clamp(27px,5vw,44px);line-height:1.1;margin:.3em 0 .25em;letter-spacing:-.025em}
+  h1 small{display:block;font-size:clamp(15px,2.2vw,19px);font-weight:400;color:var(--dim);letter-spacing:0;margin-top:10px;line-height:1.5}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .chip{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:999px;
+        border:1px solid var(--line);color:var(--dim);background:#0e1620}
+  .chip.g{color:var(--neon);border-color:rgba(57,224,143,.35)}
+  .chip.a{color:var(--amber);border-color:rgba(255,181,71,.35)}
+
+  /* ---------- sections ---------- */
+  section{margin:40px 0}
+  .step{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+  .num{font-family:var(--mono);font-size:clamp(28px,5vw,42px);color:rgba(57,224,143,.28);
+       line-height:1;font-weight:700;letter-spacing:-.03em}
+  h2{font-size:clamp(20px,3vw,27px);margin:0;letter-spacing:-.015em}
+  .lead{color:var(--dim);margin:.4em 0 1em;font-size:16.5px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.008));
+        border:1px solid var(--line);border-radius:18px;padding:22px}
+  .card+.card{margin-top:16px}
+  .card.hi{border-color:rgba(57,224,143,.32);box-shadow:0 0 0 1px rgba(57,224,143,.07)}
+  p{margin:.6em 0}
+  h3{font-size:16.5px;margin:1.3em 0 .4em}
+  h3:first-child{margin-top:0}
+  ul,ol{padding-left:22px;margin:.5em 0}
+  li{margin:.3em 0}
+  b,strong{color:#fff;font-weight:600}
+  .mono{font-family:var(--mono)}
+  .k{background:#0b1219;border:1px solid var(--line);border-radius:6px;padding:1px 6px;
+     font-family:var(--mono);font-size:.88em;color:var(--cyan)}
+  .note{font-size:14.5px;color:var(--soft);border-left:2px solid var(--line);padding-left:14px;margin:.9em 0}
+  .warn{border-left:3px solid var(--red);background:rgba(255,107,125,.07);padding:14px 18px;border-radius:0 14px 14px 0}
+  .good{border-left:3px solid var(--neon);background:rgba(57,224,143,.06);padding:14px 18px;border-radius:0 14px 14px 0}
+  .soft-box{border-left:3px solid var(--cyan);background:rgba(76,201,240,.06);padding:14px 18px;border-radius:0 14px 14px 0}
+
+  /* ---------- svg ---------- */
+  svg{display:block;max-width:100%;height:auto;margin:0 auto}
+  .svgbox{background:#0b1119;border:1px solid var(--line);border-radius:16px;padding:12px;margin:16px 0}
+
+  /* ---------- contrôles ---------- */
+  .ctrl{display:flex;align-items:center;gap:14px;margin:14px 0}
+  .ctrl label{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--dim);
+              min-width:112px;text-transform:uppercase}
+  .ctrl output{font-family:var(--mono);font-size:14px;color:var(--neon);min-width:92px;text-align:right}
+  input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:8px;border-radius:99px;
+    background:#1a2534;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;
+    background:radial-gradient(circle at 35% 32%,#fff,#39e08f 60%,#12673f);cursor:pointer;border:none;
+    box-shadow:0 0 14px rgba(57,224,143,.7)}
+  input[type=range]::-moz-range-thumb{width:24px;height:24px;border:none;border-radius:50%;
+    background:radial-gradient(circle at 35% 32%,#fff,#39e08f 60%,#12673f);cursor:pointer;
+    box-shadow:0 0 14px rgba(57,224,143,.7)}
+  button{font-family:inherit;font-size:15px;padding:11px 18px;border-radius:12px;cursor:pointer;
+    background:#17222f;color:var(--txt);border:1px solid #27384f;transition:.15s}
+  button:hover{background:#1d2b3c;border-color:#3a5170}
+  button:active{transform:translateY(1px)}
+  .btnrow{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+
+  .readout{font-family:var(--mono);background:#070c12;border:1px solid var(--line);
+           border-radius:14px;padding:16px 18px;color:var(--dim);font-size:14px;margin-top:14px}
+  .readout .big{display:block;font-size:30px;color:var(--cyan);margin:6px 0;letter-spacing:.01em}
+  .readout .big.g{color:var(--neon)} .readout .big.a{color:var(--amber)} .readout .big.r{color:var(--red)}
+
+  /* ---------- tableaux ---------- */
+  .tbl{width:100%;border-collapse:collapse;font-size:15px;margin:14px 0}
+  .tbl th,.tbl td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  .tbl th{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--soft);text-transform:uppercase}
+  .tbl td:first-child{color:var(--txt)}
+
+  /* ---------- quiz ---------- */
+  .q{border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0;background:var(--card2)}
+  .q p{font-weight:600;margin:0 0 12px;font-size:16px}
+  .opt{display:block;width:100%;text-align:left;margin:7px 0;font-size:15px;line-height:1.5}
+  .opt.good{background:rgba(57,224,143,.15);border-color:var(--neon);color:var(--neon)}
+  .opt.bad{background:rgba(255,107,125,.13);border-color:var(--red);color:var(--red)}
+  .fb{font-size:14.5px;color:var(--dim);margin-top:10px;min-height:22px}
+
+  /* ---------- anglais ---------- */
+  .voc{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  @media(max-width:640px){.voc{grid-template-columns:1fr}}
+  .w{background:#0d151f;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .w .en{color:var(--cyan);font-weight:600;font-size:16px}
+  .w .ph{font-family:var(--mono);font-size:12px;color:var(--soft)}
+  .w .fr{font-size:14px;color:var(--dim);margin-top:3px}
+
+  .teach{background:linear-gradient(180deg,rgba(255,181,71,.09),rgba(255,181,71,.02));
+         border:1px solid rgba(255,181,71,.28);border-radius:18px;padding:22px}
+  .teach h3{color:var(--amber)}
+
+  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);
+         font-family:var(--mono);font-size:12px;color:#5a6b83;line-height:1.9}
+  .toc{background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:18px 22px;margin-top:24px}
+  .toc ol{margin:0;padding-left:22px;font-size:15px}
+  .toc li{margin:.28em 0}
+  .toc a{color:var(--dim);text-decoration:none;border-bottom:1px dotted #2b3a50}
+  .toc a:hover{color:var(--neon);border-color:var(--neon)}
+  .hl{color:var(--neon)} .hlc{color:var(--cyan)} .hla{color:var(--amber)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">RATISS Academy · Électronique · Leçon 001</div>
+  <h1>Les trois mots
+    <small>Tension, courant, résistance — avant la moindre formule.<br>
+    Niveau : zéro absolu · Durée : 45 min · Aucun prérequis</small>
+  </h1>
+  <div class="meta">
+    <span class="chip g">version 1.1</span>
+    <span class="chip">03/11/2026</span>
+    <span class="chip">auteur : Jonathan Evina</span>
+    <span class="chip a">simulation ≠ mesure réelle</span>
+  </div>
+
+  <div class="toc">
+    <b style="font-size:14px">Dans cette leçon</b>
+    <ol>
+      <li><a href="#s1">Voir — le circuit est un chemin fermé</a></li>
+      <li><a href="#s2">Comprendre — les trois mots</a></li>
+      <li><a href="#s3">Simuler — l'établi virtuel</a></li>
+      <li><a href="#s4">Calculer — la loi d'Ohm, enfin utile</a></li>
+      <li><a href="#s5">Construire — ton premier montage réel</a></li>
+      <li><a href="#s6">Mesurer — les 3 gestes du multimètre</a></li>
+      <li><a href="#s-apply">Appliquer — sur une vraie carte de l'atelier</a></li>
+      <li><a href="#s7">Erreurs fréquentes</a></li>
+      <li><a href="#s8">Sécurité</a></li>
+      <li><a href="#s9">Évaluation</a></li>
+      <li><a href="#s10">Vocabulaire de travail (pas un cours d'anglais)</a></li>
+      <li><a href="#s11">À enseigner à ton ami</a></li>
+      <li><a href="#s12">Sources &amp; compétences</a></li>
+      <li><a href="#memo">🔖 Fiche mémo à imprimer</a></li>
+    </ol>
+  </div>
+</header>
+
+<!-- ============================ 1 ============================ -->
+<section id="s1">
+  <div class="step"><span class="num">01</span><h2>Voir — le circuit est un chemin fermé</h2></div>
+  <p class="lead">Avant tout mot compliqué : regarde. Ferme l'interrupteur, ouvre-le. 👉</p>
+
+  <div class="card hi">
+    <div class="svgbox">
+      <svg viewBox="0 0 720 300" role="img" aria-label="circuit simple avec interrupteur et LED">
+        <!-- fils -->
+        <g stroke="#40566e" stroke-width="4" fill="none" stroke-linecap="round">
+          <path d="M100,60 H300"/>
+          <path d="M300,60 H620 V95"/>
+          <path d="M620,165 V240 H100 V200"/>
+          <path d="M100,120 V200"/>
+        </g>
+
+        <!-- interrupteur -->
+        <circle cx="300" cy="60" r="5" fill="#93a6bf"/>
+        <circle cx="390" cy="60" r="5" fill="#93a6bf"/>
+        <line id="lever" x1="300" y1="60" x2="390" y2="60" stroke="#39e08f" stroke-width="4"
+              stroke-linecap="round" style="transform-origin:300px 60px;transition:transform .35s"/>
+        <text x="345" y="42" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11"
+              fill="#6d809b" id="swlabel">fermé</text>
+
+        <!-- LED -->
+        <g id="ledg">
+          <polygon points="600,95 640,95 620,140" fill="#4a4a4a" id="ledtri"/>
+          <rect x="600" y="140" width="40" height="5" rx="2" fill="#93a6bf"/>
+          <circle id="ledglow" cx="620" cy="118" r="38" fill="#ffb547" opacity="0" style="filter:blur(14px)"/>
+        </g>
+
+        <!-- résistance -->
+        <rect x="430" y="44" width="90" height="32" rx="4" fill="#e9f0fa" stroke="#9fb3cc" stroke-width="2"/>
+        <text x="475" y="65" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12" fill="#0a1219">220 Ω</text>
+
+        <!-- pile -->
+        <g>
+          <line x1="76" y1="120" x2="124" y2="120" stroke="#4cc9f0" stroke-width="5"/>
+          <line x1="88" y1="132" x2="112" y2="132" stroke="#4cc9f0" stroke-width="5"/>
+          <line x1="76" y1="144" x2="124" y2="144" stroke="#4cc9f0" stroke-width="5"/>
+          <line x1="88" y1="156" x2="112" y2="156" stroke="#4cc9f0" stroke-width="5"/>
+          <line x1="100" y1="120" x2="100" y2="132" stroke="#4cc9f0" stroke-width="4"/>
+          <line x1="100" y1="144" x2="100" y2="156" stroke="#4cc9f0" stroke-width="4"/>
+          <text x="40" y="116" font-family="ui-monospace,monospace" font-size="14" fill="#4cc9f0">+</text>
+          <text x="44" y="176" font-family="ui-monospace,monospace" font-size="14" fill="#4cc9f0">−</text>
+          <text x="140" y="145" font-family="ui-monospace,monospace" font-size="12" fill="#4cc9f0">9 V</text>
+        </g>
+
+        <path id="loop" d="M100,60 H620 V240 H100 Z" fill="none" stroke="none"/>
+        <g id="beads"></g>
+      </svg>
+    </div>
+
+    <div class="btnrow" style="justify-content:center">
+      <button id="sw">🔌 Ouvrir l'interrupteur</button>
+    </div>
+
+    <div class="readout" id="swread">
+      <span class="big g" style="font-size:22px">Le courant circule : la LED est allumée.</span>
+      Tout le chemin est fermé, de la borne + de la pile jusqu'à la borne −.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Ce que tu viens de voir 🧠</h3>
+    <p>Une pile a <b>deux bornes</b>. Tant qu'un chemin continu relie le <b>+</b> au <b>−</b>
+    à travers un composant, il se passe quelque chose. Dès que le chemin est coupé — même 1 millimètre —
+    <b>il ne se passe plus rien du tout</b>. Pas « moins », pas « un peu » : <b>rien</b>.</p>
+    <p class="note">Retiens la phrase, elle va te suivre toute ta vie d'électronicien :
+    <b>un circuit ouvert, c'est un chemin coupé → courant nul.</b></p>
+    <p>Et c'est <b>exactement</b> ce que ton maître cherche à l'atelier quand il pose un multimètre en mode
+    continuité : il vérifie que le chemin existe vraiment, de bout en bout. 🔍</p>
+  </div>
+</section>
+
+<!-- ============================ 2 ============================ -->
+<section id="s2">
+  <div class="step"><span class="num">02</span><h2>Comprendre — les trois mots</h2></div>
+  <p class="lead">Trois mots. Rien d'autre aujourd'hui. On les voit avec une image, puis on la traduit.</p>
+
+  <div class="card">
+    <p><b>⚠️ D'abord, l'honnêteté :</b> l'eau n'est pas l'électricité. Les électrons ne sont pas de l'eau,
+    un fil n'est pas un tuyau. L'image sert <b>uniquement</b> à voir le système. On la corrigera
+    à la leçon 005, quand on parlera d'électrons pour de vrai. Aujourd'hui, l'image est une
+    <b>béquille pour comprendre</b>, pas une vérité. 🔧</p>
+  </div>
+
+  <div class="card">
+    <h3>1️⃣ La tension — c'est un DÉNIVELÉ</h3>
+    <svg viewBox="0 0 720 190" style="margin:10px 0 4px">
+      <rect x="70" y="30" width="180" height="130" rx="8" fill="#0d1723" stroke="#27384f" stroke-width="2"/>
+      <rect x="72" y="60" width="176" height="98" fill="rgba(76,201,240,.28)"/>
+      <rect x="470" y="30" width="180" height="130" rx="8" fill="#0d1723" stroke="#27384f" stroke-width="2"/>
+      <rect x="472" y="130" width="176" height="28" fill="rgba(76,201,240,.28)"/>
+      <line x1="250" y1="60" x2="470" y2="60" stroke="#4cc9f0" stroke-width="2" stroke-dasharray="6 6" opacity=".7"/>
+      <line x1="250" y1="130" x2="470" y2="130" stroke="#4cc9f0" stroke-width="2" stroke-dasharray="6 6" opacity=".7"/>
+      <line x1="360" y1="60" x2="360" y2="130" stroke="#39e08f" stroke-width="3"/>
+      <path d="M360,60 l-7,12 M360,60 l7,12" stroke="#39e08f" stroke-width="3" fill="none"/>
+      <text x="372" y="100" font-family="ui-monospace,monospace" font-size="13" fill="#39e08f">dénivelé</text>
+      <text x="160" y="182" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#6d809b">niveau haut</text>
+      <text x="560" y="182" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#6d809b">niveau bas</text>
+    </svg>
+    <p>L'eau ne coule pas parce qu'il y a de l'eau. Elle coule parce qu'il y a une
+    <b>différence de hauteur</b> entre les deux côtés. Deux bassins à la même hauteur : rien ne bouge,
+    même s'ils sont remplis à ras bord.</p>
+    <p><b>La tension, c'est ça : une différence entre deux points.</b> Pas une quantité « contenue »
+    dans un fil. On ne dit jamais « il y a 9 V dans ce fil » — on dit <b>« il y a 9 V entre ces deux points »</b>.
+    C'est pour ça qu'un multimètre a <b>toujours deux pointes</b> : il mesure un écart, pas un niveau. 🎯</p>
+    <p class="note">Unité : le <b>volt (V)</b> · symbole <span class="k">U</span></p>
+  </div>
+
+  <div class="card">
+    <h3>2️⃣ Le courant — c'est un DÉBIT</h3>
+    <svg viewBox="0 0 720 130" style="margin:10px 0 4px">
+      <rect x="60" y="45" width="600" height="42" rx="21" fill="#0d1723" stroke="#27384f" stroke-width="2"/>
+      <g fill="#39e08f">
+        <circle cx="110" cy="66" r="7"/><circle cx="180" cy="66" r="7"/><circle cx="250" cy="66" r="7"/>
+        <circle cx="320" cy="66" r="7"/><circle cx="390" cy="66" r="7"/><circle cx="460" cy="66" r="7"/>
+        <circle cx="530" cy="66" r="7"/><circle cx="600" cy="66" r="7"/>
+      </g>
+      <text x="360" y="30" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12" fill="#39e08f">
+        combien passent par seconde ?</text>
+      <text x="360" y="115" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#6d809b">
+        débit = quantité / temps</text>
+    </svg>
+    <p>Le courant, ce n'est pas « combien il y a d'eau ». C'est <b>combien il en passe par seconde</b>
+    à un endroit donné. Un torrent et un goutte-à-goutte peuvent transporter la même quantité
+    sur une journée — mais pas avec le même débit.</p>
+    <p>Point crucial : <b>ce qui entre d'un côté ressort de l'autre</b>. Le courant ne se consomme pas,
+    il ne disparaît pas dans une lampe. Dans un circuit simple comme le nôtre, le courant est
+    <b>le même partout</b> : avant la résistance, dans la résistance, dans la LED. 🔁</p>
+    <p class="note">Unité : l'<b>ampère (A)</b> · symbole <span class="k">I</span> ·
+    1 A = 1 000 mA. En électronique on parle presque toujours en <b>milliampères</b>.</p>
+  </div>
+
+  <div class="card">
+    <h3>3️⃣ La résistance — c'est un ÉTRANGLEMENT</h3>
+    <svg viewBox="0 0 720 130" style="margin:10px 0 4px">
+      <path d="M60,45 H300 L330,66 L300,87 H60 Z" fill="#0d1723" stroke="#27384f" stroke-width="2"/>
+      <path d="M660,45 H420 L390,66 L420,87 H660 Z" fill="#0d1723" stroke="#27384f" stroke-width="2"/>
+      <circle cx="360" cy="66" r="9" fill="#ffb547" opacity=".85"/>
+      <text x="360" y="30" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12" fill="#ffb547">
+        le passage se rétrécit</text>
+      <text x="360" y="115" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#6d809b">
+        même dénivelé, moins de débit</text>
+    </svg>
+    <p>Même dénivelé, mais le tuyau se rétrécit : il passe <b>moins</b> d'eau par seconde.
+    La résistance, c'est ce rétrécissement. Elle ne « bloque » pas le courant, elle le
+    <b>limite</b> — comme un robinet à moitié fermé.</p>
+    <p>Et voilà le point que 90 % des débutants ratent : <b>une résistance ne « consomme » pas la tension.</b>
+    Elle crée une <b>chute</b> de tension à ses bornes, proportionnelle au courant qui la traverse.
+    Ce n'est pas la même chose. On le verra en live au module suivant. 🎯</p>
+    <p class="note">Unité : l'<b>ohm (Ω)</b> · symbole <span class="k">R</span> ·
+    1 kΩ = 1 000 Ω</p>
+  </div>
+</section>
+
+<!-- ============================ 3 ============================ -->
+<section id="s3">
+  <div class="step"><span class="num">03</span><h2>Simuler — l'établi virtuel</h2></div>
+  <p class="lead">Bouge les deux curseurs. Regarde l'eau couler. Puis lis la traduction en électricité. 👇</p>
+
+  <div class="card hi">
+    <div class="svgbox">
+      <svg viewBox="0 0 720 380" role="img" aria-label="simulateur hydraulique">
+        <!-- bacs -->
+        <rect x="60" y="120" width="150" height="180" rx="10" fill="#0b1119" stroke="#27384f" stroke-width="2"/>
+        <rect id="w1" x="62" y="200" width="146" height="98" fill="rgba(76,201,240,.30)"/>
+        <rect x="510" y="120" width="150" height="180" rx="10" fill="#0b1119" stroke="#27384f" stroke-width="2"/>
+        <rect x="512" y="262" width="146" height="36" fill="rgba(76,201,240,.30)"/>
+
+        <!-- tuyau horizontal -->
+        <rect x="210" y="278" width="300" height="26" fill="#0d1723" stroke="#27384f" stroke-width="2"/>
+        <!-- étranglement -->
+        <rect id="thrTop" x="330" y="278" width="60" height="4" fill="#0b1119"/>
+        <rect id="thrBot" x="330" y="300" width="60" height="4" fill="#0b1119"/>
+        <text x="360" y="330" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#ffb547">
+          étranglement</text>
+
+        <!-- billes -->
+        <g id="hbeads"></g>
+
+        <text x="135" y="108" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#6d809b">bassin A</text>
+        <text x="585" y="108" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#6d809b">bassin B</text>
+      </svg>
+    </div>
+
+    <div class="ctrl">
+      <label>Dénivelé</label>
+      <input type="range" id="hLvl" min="0" max="100" step="1" value="70">
+      <output id="oLvl">70 %</output>
+    </div>
+    <div class="ctrl">
+      <label>Étranglement</label>
+      <input type="range" id="hRes" min="1" max="10" step="1" value="3">
+      <output id="oRes">3 / 10</output>
+    </div>
+
+    <div class="readout">
+      <span class="big" id="hText">Ça coule franchement.</span>
+      <span id="hSub">Beaucoup d'eau passe par seconde.</span>
+    </div>
+
+    <div class="card" style="margin-top:16px;background:#0b1119">
+      <h3 style="margin-top:0">Traduction en électricité 🔁</h3>
+      <table class="tbl">
+        <thead><tr><th>L'eau</th><th>L'électricité</th><th>Unité</th></tr></thead>
+        <tbody>
+          <tr><td>Le dénivelé entre les deux bassins</td><td><b class="hlc">La tension</b> — la différence entre deux points</td><td>volt (V)</td></tr>
+          <tr><td>Le débit : combien par seconde</td><td><b class="hl">Le courant</b> — combien de charges par seconde</td><td>ampère (A)</td></tr>
+          <tr><td>Le tuyau qui se rétrécit</td><td><b class="hla">La résistance</b> — ce qui freine le passage</td><td>ohm (Ω)</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Et l'expérience que tu viens de faire à l'écran, traduite :
+      <b>plus de dénivelé → plus de courant</b>. <b>Plus d'étranglement → moins de courant.</b>
+      Ces deux phrases sont déjà la loi d'Ohm. Tu la connais, tu ne le savais pas encore. 😄</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 4 ============================ -->
+<section id="s4">
+  <div class="step"><span class="num">04</span><h2>Calculer — la loi d'Ohm, enfin utile</h2></div>
+  <p class="lead">Tu la connais déjà. Aujourd'hui on ne l'apprend pas : on s'en sert pour de vrai.</p>
+
+  <div class="card">
+    <div style="text-align:center;padding:10px 0 16px">
+      <span style="font-family:var(--mono);font-size:clamp(24px,6vw,40px);letter-spacing:.05em">
+        <span class="hlc">U</span> = <span class="hla">R</span> × <span class="hl">I</span>
+      </span>
+      <div style="color:var(--soft);font-size:14px;margin-top:8px">
+        volts = ohms × ampères · et donc <span class="mono">I = U / R</span> et <span class="mono">R = U / I</span>
+      </div>
+    </div>
+    <p class="note">Le seul piège : les <b>unités</b>. Si le courant est en mA, tu dois le mettre en A
+    (20 mA = 0,020 A) avant de calculer. Presque toutes les erreurs de débutant viennent de là. ⚠️</p>
+  </div>
+
+  <div class="card">
+    <h3>Le problème que tu vas poser cent fois dans ta vie 🎯</h3>
+    <p>« J'ai une pile de <b>9 V</b> et une <b>LED rouge</b>. Quelle résistance je mets ? »</p>
+    <table class="tbl">
+      <thead><tr><th>Étape</th><th>Ce qu'on fait</th><th>Résultat</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>La LED a besoin d'environ <b>2 V</b> pour s'allumer (rouge). Le reste doit tomber sur R.</td><td>9 − 2 = <b>7 V</b></td></tr>
+        <tr><td>2</td><td>On vise un courant raisonnable : <b>20 mA</b> = 0,020 A.</td><td>I = 0,020 A</td></tr>
+        <tr><td>3</td><td>On applique la loi d'Ohm sur R seulement.</td><td>R = 7 / 0,020 = <b>350 Ω</b></td></tr>
+        <tr><td>4</td><td>Cette valeur n'existe pas dans le commerce. On prend la plus proche <b>au-dessus</b>.</td><td><b>330 Ω</b> ✔</td></tr>
+      </tbody>
+    </table>
+    <p class="good"><b>Vérification, toujours :</b> avec 330 Ω, le courant réel est
+    I = 7 / 330 = <b>21 mA</b>. C'est bon, la LED vit sans souffrir. Tu as le droit de vérifier ton propre calcul —
+    et tu dois le faire. C'est la méthode RATISS. 🔒</p>
+  </div>
+
+  <div class="card hi">
+    <h3>Le calculateur — à utiliser, pas à copier 🤖</h3>
+    <p style="color:var(--dim);font-size:15px">Change les valeurs, il recalcule. Mais fais d'abord le calcul à la main, puis vérifie avec lui.</p>
+    <div class="ctrl">
+      <label>Pile (V)</label>
+      <input type="range" id="cVs" min="3" max="12" step="0.5" value="9">
+      <output id="oVs">9.0 V</output>
+    </div>
+    <div class="ctrl">
+      <label>LED (V)</label>
+      <input type="range" id="cVf" min="1.8" max="3.2" step="0.1" value="2.0">
+      <output id="oVf">2.0 V</output>
+    </div>
+    <div class="ctrl">
+      <label>Courant (mA)</label>
+      <input type="range" id="cI" min="5" max="25" step="1" value="20">
+      <output id="oI">20 mA</output>
+    </div>
+    <div class="readout" style="margin-top:16px">
+      <span class="big" id="calcR">350 Ω</span>
+      <span id="calcTxt">→ valeur du commerce la plus proche : <b id="calcStd">330 Ω</b></span>
+      <div style="margin-top:10px;font-size:13.5px" id="calcChk"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 5 ============================ -->
+<section id="s5">
+  <div class="step"><span class="num">05</span><h2>Construire — ton premier montage réel</h2></div>
+  <p class="lead">À faire à l'atelier, avec ton maître. Pas seul devant une alim secteur, jamais.</p>
+
+  <div class="card">
+    <h3>Matériel</h3>
+    <ul>
+      <li>Une pile 9 V (neuve) et son connecteur, <b>ou</b> une alim 5 V USB</li>
+      <li>Une résistance 330 Ω (ou 220 Ω si tu utilises 5 V)</li>
+      <li>Une LED rouge</li>
+      <li>Ton multimètre</li>
+      <li>2 fils (ou des pinces croco)</li>
+    </ul>
+    <p class="note">Pas encore de breadboard ? Tu n'en as pas besoin. Les fils et les pinces suffisent pour ce montage.</p>
+
+    <h3>Montage, étape par étape</h3>
+    <ol>
+      <li><b>Ne branche rien.</b> Regarde d'abord la LED : <b>la patte la plus longue est le +</b> (anode).
+      L'autre est le − (cathode).</li>
+      <li>Relie la borne <b>+</b> de la pile à une patte de la résistance.</li>
+      <li>Relie l'autre patte de la résistance à la <b>patte longue</b> de la LED.</li>
+      <li>Relie la <b>patte courte</b> de la LED à la borne <b>−</b> de la pile.</li>
+      <li>Ça s'allume ✅ … ou pas. Voir ci-dessous.</li>
+    </ol>
+
+    <h3>Si ça ne s'allume pas — le petit diagnostic 🔍</h3>
+    <table class="tbl">
+      <thead><tr><th>Symptôme</th><th>Cause probable</th><th>Ce que tu fais</th></tr></thead>
+      <tbody>
+        <tr><td>Rien du tout</td><td>LED à l'envers</td><td>Inverse ses deux pattes. Une LED est un sens unique.</td></tr>
+        <tr><td>Rien du tout</td><td>Chemin coupé</td><td>Multimètre en <b>continuité</b> sur chaque fil.</td></tr>
+        <tr><td>Elle a flashé puis s'est éteinte</td><td>Résistance oubliée 💀</td><td>La LED est morte. Recommence avec R.</td></tr>
+        <tr><td>Très faible</td><td>Pile usée</td><td>Mesure la pile : si tu lis 7 V au lieu de 9 V, elle est fatiguée.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Ce que tu dois noter dans ton journal 📓</h3>
+    <ul>
+      <li>Tension réelle de la pile, mesurée : ______ V</li>
+      <li>Tension aux bornes de R, mesurée : ______ V</li>
+      <li>Tension aux bornes de la LED, mesurée : ______ V</li>
+      <li>La somme U<sub>R</sub> + U<sub>LED</sub> est-elle égale à la tension de la pile ? ______</li>
+    </ul>
+    <p class="soft-box"><b>Pourquoi cette vérification ?</b> Parce que la tension se <b>répartit</b> entre les
+    composants d'un même chemin. Si la somme ne colle pas, il y a un faux contact ou une mesure mal prise —
+    et <b>c'est ça, la vraie leçon</b>. Un électronicien ne croit pas son montage, il le vérifie. 🔒</p>
+  </div>
+</section>
+
+<!-- ============================ 6 ============================ -->
+<section id="s6">
+  <div class="step"><span class="num">06</span><h2>Mesurer — les 3 gestes du multimètre</h2></div>
+  <p class="lead">Ton multimètre a deux pointes : <b>noire sur COM</b>, <b>rouge sur VΩmA</b>. Toujours.</p>
+
+  <div class="card">
+    <h3>Geste 1 — La continuité (mode 🔔)</h3>
+    <p>But : savoir si un chemin existe. Tu poses une pointe à chaque extrémité du fil.
+    Ça bipe = le chemin est là. Ça ne bipe pas = coupé.</p>
+    <p><b>Quand l'utiliser :</b> à chaque fois qu'un appareil ne s'allume pas. C'est <b>le premier geste</b>
+    du réparateur, avant toute autre chose. 80 % des pannes « mystérieuses » sont un chemin coupé.</p>
+
+    <h3>Geste 2 — La tension (mode V⎓), en PARALLÈLE ⚡</h3>
+    <p>Tu poses les deux pointes <b>de chaque côté</b> du composant, sans rien débrancher.
+    L'appareil lit la différence entre les deux points.</p>
+    <p class="warn"><b>Règle absolue :</b> le voltmètre se branche <b>en parallèle</b> (à côté du composant),
+    l'ampèremètre <b>en série</b> (dans le chemin, il faut couper le fil).
+    Inverser les deux est <b>l'erreur n°1</b> des débutants, et elle grille le fusible du multimètre.</p>
+
+    <h3>Geste 3 — Le courant (mode A), en SÉRIE ⚡</h3>
+    <p>Le courant doit <b>traverser</b> l'appareil. Donc tu <b>casses le circuit</b> et tu insères le
+    multimètre dans la coupure. C'est plus long, c'est normal — un réparateur mesure rarement le courant,
+    il mesure surtout des tensions. 🎯</p>
+  </div>
+
+  <div class="card">
+    <h3>Le réflexe à prendre dès maintenant</h3>
+    <p><b>Avant chaque mesure, dis à voix haute ce que tu t'attends à lire.</b> « Je m'attends à environ 7 V
+    aux bornes de la résistance. » Puis mesure. Si tu lis 0 V, tu n'as pas « un problème de multimètre » :
+    tu as <b>une information</b>. La mesure qui contredit la prédiction est la plus précieuse de toutes. 🧠</p>
+  </div>
+</section>
+
+
+<!-- ============================ 07 APPLIQUER ============================ -->
+<section id="s-apply">
+  <div class="step"><span class="num">07</span><h2>Appliquer — sur une vraie carte de l'atelier</h2></div>
+  <p class="lead">Le cycle n'est pas fini tant que tu n'as pas <b>retrouvé</b> ces trois mots sur un vrai circuit imprimé. 👇</p>
+
+  <div class="card hi">
+    <div class="svgbox">
+      <svg viewBox="0 0 720 340" role="img" aria-label="fragment de circuit imprimé annoté">
+        <rect x="40" y="30" width="640" height="280" rx="14" fill="#0d2a1e" stroke="#1d5c3f" stroke-width="2"/>
+        <!-- pistes cuivre -->
+        <g stroke="#c9a227" stroke-width="6" fill="none" stroke-linecap="round" opacity=".85">
+          <path d="M110,120 H190"/>
+          <path d="M290,120 H360 V190 H420"/>
+          <path d="M470,190 H560"/>
+          <path d="M110,220 H250"/>
+          <path d="M330,220 H560 V240"/>
+        </g>
+        <!-- pastilles -->
+        <g fill="#d8c26a">
+          <circle cx="110" cy="120" r="9"/><circle cx="110" cy="220" r="9"/>
+          <circle cx="560" cy="190" r="9"/><circle cx="560" cy="240" r="9"/>
+        </g>
+        <!-- connecteur -->
+        <rect x="60" y="90" width="52" height="160" rx="6" fill="#1b1b1b" stroke="#3a3a3a" stroke-width="2"/>
+        <g fill="#a9a9a9"><circle cx="86" cy="112" r="6"/><circle cx="86" cy="150" r="6"/>
+        <circle cx="86" cy="190" r="6"/><circle cx="86" cy="228" r="6"/></g>
+        <!-- résistance SMD -->
+        <rect x="200" y="100" width="80" height="40" rx="3" fill="#111" stroke="#2c2c2c" stroke-width="2"/>
+        <text x="240" y="126" text-anchor="middle" font-family="ui-monospace,monospace" font-size="17" fill="#e6e6e6">331</text>
+        <rect x="190" y="108" width="14" height="24" rx="2" fill="#c0c0c0"/>
+        <rect x="276" y="108" width="14" height="24" rx="2" fill="#c0c0c0"/>
+        <!-- LED -->
+        <rect x="430" y="170" width="40" height="40" rx="4" fill="#ffb547" opacity=".9"/>
+        <polygon points="440,200 460,200 450,182" fill="#7a4a00"/>
+        <!-- transfos / autre -->
+        <rect x="330" y="205" width="34" height="30" rx="3" fill="#2a2a2a" stroke="#3d3d3d"/>
+        <!-- annotations -->
+        <g id="annots" opacity="0" font-family="ui-monospace,monospace" font-size="12">
+          <line x1="240" y1="96" x2="240" y2="60" stroke="#39e08f" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="240" y="52" text-anchor="middle" fill="#39e08f">résistance : « 331 » = 33 × 10¹ = 330 Ω</text>
+          <line x1="450" y1="166" x2="450" y2="272" stroke="#ffb547" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="450" y="290" text-anchor="middle" fill="#ffb547">LED — la barre = la cathode (−)</text>
+          <line x1="86" y1="252" x2="86" y2="272" stroke="#4cc9f0" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="86" y="290" text-anchor="middle" fill="#4cc9f0">connecteur / alimentation</text>
+          <line x1="560" y1="190" x2="620" y2="160" stroke="#c0a4ff" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="600" y="148" text-anchor="middle" fill="#c0a4ff">piste cuivre</text>
+          <text x="360" y="316" text-anchor="middle" fill="#93a6bf">— carte vue de dessus, échelle imaginaire —</text>
+        </g>
+      </svg>
+    </div>
+    <div class="btnrow" style="justify-content:center">
+      <button id="annotBtn">🔍 Révéler les annotations</button>
+    </div>
+
+    <h3>Comment on lit une vraie carte 🔎</h3>
+    <table class="tbl">
+      <thead><tr><th>Sur le schéma</th><th>Sur la carte réelle</th><th>Comment tu le reconnais</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Le nœud</td>
+          <td>La <b>piste de cuivre</b> ou le plan de masse</td>
+          <td>Tout ce qui est relié par du cuivre continu est au <b>même potentiel</b>. Tu le vérifies en continuité.</td>
+        </tr>
+        <tr>
+          <td>La résistance (Ω)</td>
+          <td>Un petit rectangle noir, souvent marqué <b>331</b>, <b>102</b>, <b>472</b>…</td>
+          <td><b>3 chiffres</b> = 2 chiffres + un multiplicateur. <span class="mono">331</span> → 33 × 10¹ = <b>330 Ω</b>.
+          <span class="mono">102</span> → 10 × 10² = <b>1 kΩ</b>.</td>
+        </tr>
+        <tr>
+          <td>La LED</td>
+          <td>Un boîtier avec une <b>barre</b> d'un côté</td>
+          <td>La barre = la cathode = le <b>−</b>. C'est la patte courte.</td>
+        </tr>
+        <tr>
+          <td>Le circuit ouvert</td>
+          <td>Une <b>piste coupée</b>, une <b>soudure froide</b>, un connecteur desserré</td>
+          <td>C'est <b>la panne n°1</b> de tous les appareils. Le multimètre en continuité la trouve en 10 secondes.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="good">
+      <b>La phrase à retenir pour l'atelier :</b> quand un appareil ne s'allume pas, tu ne cherches pas
+      « un composant mort ». Tu cherches <b>où le chemin est coupé</b>. Le composant mort vient après. 🎯
+    </div>
+  </div>
+
+</section>
+<!-- ============================ 7 ============================ -->
+<section id="s7">
+  <div class="step"><span class="num">08</span><h2>Erreurs fréquentes</h2></div>
+  <div class="card">
+    <ol>
+      <li><b>LED branchée à l'envers.</b> Elle ne s'allume pas — elle ne grille pas. Le sens compte.</li>
+      <li><b>Résistance oubliée.</b> La LED grille en une fraction de seconde. C'est le classique du débutant.</li>
+      <li><b>Confondre mA et A dans un calcul.</b> 20 mA = 0,020 A. Pas 20 A.</li>
+      <li><b>Ampèremètre en parallèle.</b> Court-circuit → fusible du multimètre mort.</li>
+      <li><b>Multimètre resté en mode ampèremètre.</b> Tu mesures une tension → tu lis n'importe quoi.
+      <b>Vérifie toujours le mode avant de poser les pointes.</b></li>
+      <li><b>Croire que la résistance « consomme » la tension.</b> Non : elle en fait tomber une partie,
+      proportionnellement au courant.</li>
+      <li><b>Croire qu'une simulation est une preuve.</b> Elle aide à comprendre. Seul le multimètre arbitre.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============================ 8 ============================ -->
+<section id="s8">
+  <div class="step"><span class="num">09</span><h2>Sécurité</h2></div>
+  <div class="card warn">
+    <p style="margin-top:0"><b>🛑 Cette leçon se fait exclusivement en basse tension :</b> pile 9 V, USB 5 V.
+    Rien d'autre.</p>
+    <ul>
+      <li><b>Jamais</b> le 230 V du secteur sans ton maître physiquement présent.</li>
+      <li><b>Jamais</b> une batterie lithium gonflée ou endommagée.</li>
+      <li><b>Jamais</b> les 48 V LiFePO4 ni les supercondensateurs de RATISS-GRID. Ce sont des systèmes de puissance.</li>
+      <li>Une LED ne fait pas mal. Un condensateur chargé, un fer à souder à 350 °C et une batterie, oui.</li>
+      <li><b>Débranche avant de toucher.</b> Toujours. Même pour « juste regarder ».</li>
+    </ul>
+    <p style="margin-bottom:0"><b>Et la règle du labo :</b> une main dans la poche quand un circuit est sous tension.
+    Ça paraît théâtral. C'est ce qui empêche un courant de traverser ton cœur d'une main à l'autre. 🧠</p>
+  </div>
+</section>
+
+<!-- ============================ 9 ============================ -->
+<section id="s9">
+  <div class="step"><span class="num">10</span><h2>Évaluation</h2></div>
+  <p class="lead">5 questions. Pas de note, pas de stress — juste pour voir ce qui est clair.</p>
+  <div id="quiz"></div>
+  <div class="readout" style="margin-top:16px">Répondues : <b id="qs">0 / 5</b> — <b id="qok">0</b> justes</div>
+</section>
+
+<!-- ============================ 10 ============================ -->
+<section id="s10">
+  <div class="step"><span class="num">11</span><h2>Vocabulaire de travail</h2></div>
+  <p class="lead">🔧 <b>Ce n'est pas la leçon d'anglais.</b> La vraie formation en anglais est un pilier séparé. Ici, juste 5 mots d'outillage pour lire une fiche technique. 🇬🇧</p>
+  <div class="card">
+    <div class="voc">
+      <div class="w"><div class="en">voltage</div><div class="ph">/ˈvoʊl.tɪdʒ/ — « VOL-tij »</div><div class="fr">la tension</div></div>
+      <div class="w"><div class="en">current</div><div class="ph">/ˈkɜː.rənt/ — « KEUR-eunt »</div><div class="fr">le courant</div></div>
+      <div class="w"><div class="en">resistance</div><div class="ph">/rɪˈzɪs.təns/ — « ri-ZISS-teuns »</div><div class="fr">la résistance</div></div>
+      <div class="w"><div class="en">open circuit</div><div class="ph">/ˈoʊ.pən ˈsɜː.kɪt/</div><div class="fr">circuit ouvert — le chemin est coupé, le courant ne passe pas</div></div>
+      <div class="w"><div class="en">closed circuit</div><div class="ph">/kloʊzd ˈsɜː.kɪt/</div><div class="fr">circuit fermé — le chemin est complet, le courant passe</div></div>
+    </div>
+    <p class="note" style="margin-top:16px">Petit entraînement : lis à voix haute
+    « <i>The current in a closed circuit is limited by the resistance.</i> » → « Le courant, dans un circuit
+    fermé, est limité par la résistance. » Tu viens de lire une phrase de fiche technique. 🎉</p>
+  </div>
+</section>
+
+<!-- ============================ 11 ============================ -->
+<section id="s11">
+  <div class="step"><span class="num">12</span><h2>À enseigner à ton ami</h2></div>
+  <p class="lead">C'est ici que tu vas vraiment comprendre. Expliquer, c'est se tester. 🎓</p>
+  <div class="teach">
+    <h3>Les 3 questions que tu dois lui poser</h3>
+    <ol>
+      <li>« Deux bassins remplis à la même hauteur : est-ce que l'eau coule ? Et deux points d'un circuit
+      au même potentiel ? » <br><span style="color:var(--dim);font-size:14.5px">
+      → Il doit répondre <b>non dans les deux cas</b>, et dire <b>pourquoi</b>.</span></li>
+      <li>« Pourquoi on met une résistance avec une LED, et pas juste le fil ? » <br>
+      <span style="color:var(--dim);font-size:14.5px">→ Il doit dire : <b>pour limiter le courant</b>.
+      S'il répond « pour protéger », demande-lui : « protéger de quoi ? » — la réponse est : d'un courant trop fort.</span></li>
+      <li>« Le courant, il diminue quand il traverse une résistance ? » <br>
+      <span style="color:var(--dim);font-size:14.5px">→ Piège. Dans un circuit simple, <b>non</b> :
+      le courant est le même partout. C'est la <b>tension</b> qui chute.</span></li>
+    </ol>
+
+    <h3>La manipulation à faire ensemble</h3>
+    <p>Le montage 9 V + 330 Ω + LED. Tu le fais, <b>il regarde sans toucher</b>. Puis tu lui demandes de
+    refaire le calcul de R pour une pile de 5 V, avant de le laisser monter. S'il trouve ~150 Ω → il a compris.
+    S'il trouve 350 Ω → il a recopié sans réfléchir, refais le module 4 avec lui.</p>
+
+    <h3>Le critère de validation</h3>
+    <p class="good" style="margin-bottom:0"><b>Il a compris si</b> — sans notes, sans toi — il peut :
+    ① expliquer pourquoi un circuit ouvert ne marche pas, ② dire ce qui se passe si on enlève la résistance,
+    et ③ calculer une résistance pour 5 V / LED 2 V / 15 mA (réponse : 200 Ω → 220 Ω du commerce).
+    S'il n'y arrive pas, <b>ce n'est pas lui le problème, c'est la leçon</b> : on la refait autrement. 🔁</p>
+  </div>
+</section>
+
+<!-- ============================ 12 ============================ -->
+<section id="s12">
+  <div class="step"><span class="num">13</span><h2>Sources &amp; compétences</h2></div>
+
+  <div class="card">
+    <h3>Compétences acquises à la fin de cette leçon</h3>
+    <table class="tbl">
+      <thead><tr><th>Compétence</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td>Distinguer circuit ouvert / fermé et en déduire que le courant est nul</td><td>Théorique</td></tr>
+        <tr><td>Définir tension, courant, résistance en une phrase chacun</td><td>Théorique</td></tr>
+        <tr><td>Calculer une résistance série pour une LED (R = (U − U<sub>LED</sub>) / I)</td><td>Théorique</td></tr>
+        <tr><td>Monter le circuit 9 V + R + LED</td><td>Pratique — <b>à valider par le maître</b></td></tr>
+        <tr><td>Mesurer une tension en parallèle et une continuité</td><td>Pratique — <b>à valider par le maître</b></td></tr>
+        <tr><td>Lire et prononcer 5 mots techniques anglais</td><td>Langue</td></tr>
+      </tbody>
+    </table>
+    <p class="note">⚠️ <b>Aucune compétence pratique n'est acquise</b> tant qu'elle n'a pas été réalisée
+    physiquement et validée par ton maître. Une simulation réussie ne vaut pas une validation.</p>
+  </div>
+
+  <div class="card">
+    <h3>Sources</h3>
+    <ul style="font-size:15px;color:var(--dim)">
+      <li>Loi d'Ohm et conventions : toute littérature d'électronique de base (Khan Academy, All About Circuits).</li>
+      <li>Valeurs normalisées de résistances : série <b>E12</b> / <b>E24</b> (norme CEI 60063).</li>
+      <li>Tension de seuil des LED : ordre de grandeur 1,8–2,2 V (rouge), 3,0–3,4 V (bleu/blanc) — <b>vérifier la fiche technique du composant réel</b>, ces valeurs varient.</li>
+      <li>Bonnes pratiques de mesure : manuel de l'utilisateur du multimètre.</li>
+    </ul>
+    <p class="note">Aucune valeur de cette leçon n'est inventée : toutes les valeurs sont calculées à partir
+    des formules affichées, et toute lecture réelle doit être faite au multimètre.</p>
+  </div>
+
+  <div class="card">
+    <h3>Historique des versions</h3>
+    <table class="tbl">
+      <thead><tr><th>Version</th><th>Date</th><th>Changement</th></tr></thead>
+      <tbody>
+        <tr><td>1.0</td><td>03/11/2026</td><td>Création — version « niveau zéro », remplace le brouillon LECON-01 jugé trop dense.</td></tr>
+        <tr><td>1.1</td><td>03/11/2026</td><td>Ajout de l'étape <b>Appliquer</b> (lecture d'une vraie carte, code « 331 ») qui manquait au cycle, et d'une <b>fiche mémo</b> imprimable. Renumérotation des sections.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ============================ MÉMO ============================ -->
+<section id="memo">
+  <div class="step"><span class="num">🔖</span><h2>Fiche mémo — à imprimer</h2></div>
+  <p class="lead">Une page. C'est tout ce que tu dois savoir de cette leçon dans 6 mois.</p>
+  <div class="card hi" style="font-size:15.5px">
+    <div class="grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+      <div>
+        <h3 style="margin-top:0">Les 3 mots</h3>
+        <ul style="padding-left:18px;margin:0">
+          <li><b>Tension (U)</b> = une <b>différence</b> entre deux points. Volt (V).</li>
+          <li><b>Courant (I)</b> = un <b>débit</b>. Ampère (A). Le même partout dans un circuit simple.</li>
+          <li><b>Résistance (R)</b> = ce qui <b>limite</b> le courant. Ohm (Ω).</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="margin-top:0">La formule</h3>
+        <p class="mono" style="font-size:22px;margin:.2em 0">U = R × I</p>
+        <p style="color:var(--dim);font-size:14px;margin:0">Donc I = U/R et R = U/I.
+        <b>Toujours en ampères</b> dans le calcul : 20 mA = 0,020 A.</p>
+      </div>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--line);margin:18px 0">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+      <div>
+        <h3 style="margin-top:0">Le calcul type (LED)</h3>
+        <p class="mono" style="font-size:13.5px;line-height:1.9;margin:0">
+          R = (U<sub>pile</sub> − U<sub>LED</sub>) / I<br>
+          R = (9 − 2) / 0,020 = 350 Ω<br>
+          → valeur du commerce : <b>330 Ω</b><br>
+          → vérif : I = 7/330 = 21 mA ✔
+        </p>
+      </div>
+      <div>
+        <h3 style="margin-top:0">Les 3 gestes multimètre</h3>
+        <ul style="padding-left:18px;margin:0">
+          <li><b>Continuité</b> 🔔 — le chemin existe-t-il ?</li>
+          <li><b>Tension</b> — pointes <b>en parallèle</b> sur le composant.</li>
+          <li><b>Courant</b> — <b>en série</b>, on coupe le fil. Rarement utile.</li>
+        </ul>
+      </div>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--line);margin:18px 0">
+    <h3 style="margin-top:0">5 mots de travail 🇬🇧</h3>
+    <p class="mono" style="font-size:13.5px;margin:0;color:var(--dim)">
+      voltage · current · resistance · open circuit · closed circuit
+    </p>
+    <p style="margin:.8em 0 0;color:var(--soft);font-size:13.5px">
+      ⚠️ Basse tension uniquement. Le 230 V, les batteries lithium et les supercondensateurs
+      se manipulent <b>avec le maître</b>.
+    </p>
+  </div>
+</section>
+
+<footer>
+  RATISS Academy · Leçon 001 — « Les trois mots » · v1.1 · 03/11/2026<br>
+  Auteur : Jonathan Evina · RATISS Labs · Yaoundé<br>
+  Simulation ≠ prototype ≠ mesure réelle. Seul le multimètre arbitre.
+</footer>
+
+</div>
+
+<script>
+/* ================= 1. INTERRUPTEUR ================= */
+(function(){
+  const lever=document.getElementById('lever');
+  const beadsG=document.getElementById('beads');
+  const ledglow=document.getElementById('ledglow');
+  const ledtri=document.getElementById('ledtri');
+  const btn=document.getElementById('sw');
+  const out=document.getElementById('swread');
+  const swlabel=document.getElementById('swlabel');
+  const loop=document.getElementById('loop');
+  const L=loop.getTotalLength();
+  const dots=[];
+  for(let i=0;i<24;i++){
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('r',3.4); c.setAttribute('fill', i%4===0?'#4cc9f0':'#39e08f');
+    beadsG.appendChild(c); dots.push(c);
+  }
+  let closed=true, off=0, last=performance.now();
+
+  function draw(){
+    dots.forEach((d,i)=>{
+      const p=loop.getPointAtLength((off + i*L/24)%L);
+      d.setAttribute('cx',p.x); d.setAttribute('cy',p.y);
+      d.setAttribute('opacity', closed?0.95:0.1);
+    });
+  }
+  function paint(){
+    lever.style.transform = closed? 'rotate(0deg)' : 'rotate(-38deg)';
+    swlabel.textContent = closed? 'fermé':'ouvert';
+    swlabel.setAttribute('fill', closed? '#39e08f':'#ff6b7d');
+    ledglow.setAttribute('opacity', closed? 0.95 : 0);
+    ledtri.setAttribute('fill', closed? '#ffb547':'#4a4a4a');
+    btn.textContent = closed? '🔌 Ouvrir l\'interrupteur' : '🔌 Fermer l\'interrupteur';
+    out.innerHTML = closed
+      ? '<span class="big g" style="font-size:22px">Le courant circule : la LED est allumée.</span>Tout le chemin est fermé, de la borne + de la pile jusqu\'à la borne −.'
+      : '<span class="big r" style="font-size:22px">Circuit ouvert : plus rien ne passe.</span>La LED est éteinte et le courant vaut exactement 0. Le chemin est coupé, pas « réduit » : coupé.';
+  }
+  btn.onclick=()=>{ closed=!closed; paint(); };
+  paint();
+  function loopAnim(t){
+    const dt=Math.min(60,t-last); last=t;
+    if(closed) off=(off+95*dt/1000)%L;
+    draw();
+    requestAnimationFrame(loopAnim);
+  }
+  requestAnimationFrame(loopAnim);
+})();
+
+/* ================= 2. ÉTABLI HYDRAULIQUE ================= */
+(function(){
+  const lvl=document.getElementById('hLvl'), res=document.getElementById('hRes');
+  const oLvl=document.getElementById('oLvl'), oRes=document.getElementById('oRes');
+  const w1=document.getElementById('w1');
+  const thrTop=document.getElementById('thrTop'), thrBot=document.getElementById('thrBot');
+  const txt=document.getElementById('hText'), sub=document.getElementById('hSub');
+  const g=document.getElementById('hbeads');
+  const beads=[];
+  for(let i=0;i<18;i++){
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('r',5); c.setAttribute('fill','#4cc9f0'); c.setAttribute('cy',291);
+    g.appendChild(c); beads.push(c);
+  }
+  let speed=0, pos=0, last=performance.now();
+
+  function render(){
+    const h=+lvl.value, r=+res.value;
+    oLvl.textContent=h+' %';
+    oRes.textContent=r+' / 10';
+    // niveau d'eau du bassin A (max 98 px)
+    const px=Math.max(0,h/100*98);
+    w1.setAttribute('y',298-px);
+    w1.setAttribute('height',px);
+    // étranglement : épaisseur des blocs qui pincent le tuyau
+    const t=Math.min(11, (r/10)*12);
+    thrTop.setAttribute('height',t);
+    thrBot.setAttribute('y', 304-t);
+    thrBot.setAttribute('height',t);
+    // débit
+    speed = h>0 ? (h/100)*160/(r*0.9) : 0;
+    if(h===0){
+      txt.textContent='Rien ne coule.';
+      txt.className='big a';
+      sub.textContent='Aucun dénivelé : les deux bassins sont au même niveau. Même remplis à ras bord, l\'eau reste immobile. C\'est la tension = 0 V.';
+    } else if(r>=8){
+      txt.textContent='Ça passe au goutte-à-goutte.';
+      txt.className='big a';
+      sub.textContent='Le dénivelé existe, mais le tuyau est presque bouché. Beaucoup de tension, beaucoup de résistance → très peu de courant.';
+    } else if(h>=60 && r<=3){
+      txt.textContent='Ça coule franchement.';
+      txt.className='big g';
+      sub.textContent='Gros dénivelé + tuyau large → beaucoup de courant. Ramène ça à une LED : elle grille. C\'est exactement pour ça qu\'on met une résistance.';
+    } else {
+      txt.textContent='Ça coule doucement.';
+      txt.className='big';
+      sub.textContent='Un dénivelé moyen, un tuyau un peu serré. C\'est la zone de travail normale d\'un circuit.';
+    }
+  }
+  function anim(t){
+    const dt=Math.min(60,t-last); last=t;
+    pos=(pos + speed*dt/1000) % 320;
+    beads.forEach((b,i)=>{
+      const x = 215 + ((pos + i*320/18) % 320);
+      b.setAttribute('cx',x);
+      b.setAttribute('opacity', h_zero()?0.12:0.95);
+    });
+    requestAnimationFrame(anim);
+  }
+  function h_zero(){ return +lvl.value===0; }
+  lvl.oninput=render; res.oninput=render;
+  render(); requestAnimationFrame(anim);
+})();
+
+/* ================= 3. CALCULATEUR ================= */
+(function(){
+  const E12=[100,120,150,180,220,270,330,390,470,560,680,820,1000,1200];
+  const vs=document.getElementById('cVs'), vf=document.getElementById('cVf'), ci=document.getElementById('cI');
+  const oVs=document.getElementById('oVs'), oVf=document.getElementById('oVf'), oI=document.getElementById('oI');
+  const calcR=document.getElementById('calcR'), calcStd=document.getElementById('calcStd'), chk=document.getElementById('calcChk');
+  function render(){
+    const V=+vs.value, F=+vf.value, mA=+ci.value;
+    oVs.textContent=V.toFixed(1)+' V';
+    oVf.textContent=F.toFixed(1)+' V';
+    oI.textContent=mA+' mA';
+    const drop=V-F;
+    if(drop<=0){
+      calcR.textContent='—';
+      calcR.className='big r';
+      calcStd.textContent='impossible';
+      chk.innerHTML='⚠️ La pile ne dépasse pas la tension de la LED : le courant sera nul, la LED ne s\'allumera pas.';
+      return;
+    }
+    const R=drop/(mA/1000);
+    calcR.className='big';
+    calcR.textContent=Math.round(R)+' Ω';
+    let std=E12.find(v=>v>=R);
+    if(!std) std=E12[E12.length-1];
+    calcStd.textContent=std+' Ω';
+    const real=(drop/std*1000);
+    chk.innerHTML='Détail : U<sub>R</sub> = '+V.toFixed(1)+' − '+F.toFixed(1)+' = <b>'+drop.toFixed(1)+' V</b> · R = '+drop.toFixed(1)+' / '+(mA/1000).toFixed(3)+' = <b>'+Math.round(R)+' Ω</b><br>'+
+      'Vérification avec '+std+' Ω : I = '+drop.toFixed(1)+'/'+std+' = <b>'+real.toFixed(1)+' mA</b> '+
+      (real>25?'— ⚠️ un peu fort, prends la valeur au-dessus':'— ✅ correct');
+  }
+  vs.oninput=render; vf.oninput=render; ci.oninput=render;
+  render();
+})();
+
+/* ================= 4. QUIZ ================= */
+(function(){
+  const Q=[
+    {q:"Un interrupteur est ouvert. Que vaut le courant dans le circuit ?",
+     a:["Il diminue un peu","Exactement 0","Il reste le même"], g:1,
+     fb:"Un chemin coupé, c'est un courant nul. Pas « plus faible » : nul. C'est la base de tout diagnostic de panne."},
+    {q:"La tension, c'est…",
+     a:["Une quantité d'électricité stockée dans un fil","Une différence entre deux points","La vitesse des électrons"], g:1,
+     fb:"Une différence de potentiel entre DEUX points. C'est pour ça que le multimètre a deux pointes."},
+    {q:"Tu mets une résistance plus grande. À tension égale, le courant…",
+     a:["augmente","ne change pas","diminue"], g:2,
+     fb:"I = U/R : si R augmente et que U ne bouge pas, I diminue. Tu l'as vu à l'établi virtuel."},
+    {q:"Pile 9 V, LED 2 V, tu veux 20 mA. Quelle résistance ?",
+     a:["450 Ω","350 Ω → on prend 330 Ω","180 Ω"], g:1,
+     fb:"(9−2)/0,020 = 350 Ω. On prend la valeur normalisée au-dessus : 330 Ω donne 21 mA, parfait."},
+    {q:"Dans notre circuit simple, le courant qui traverse la résistance est…",
+     a:["plus grand qu'après la résistance","le même partout dans le circuit","plus petit qu'après la résistance"], g:1,
+     fb:"Le courant ne se consomme pas : ce qui entre ressort. C'est la TENSION qui chute dans la résistance, pas le courant."}
+  ];
+  const box=document.getElementById('quiz');
+  let done=0, ok=0;
+  Q.forEach((item,qi)=>{
+    const d=document.createElement('div'); d.className='q';
+    const p=document.createElement('p'); p.textContent=(qi+1)+'. '+item.q; d.appendChild(p);
+    const fb=document.createElement('div'); fb.className='fb';
+    let locked=false;
+    item.a.forEach((t,ai)=>{
+      const b=document.createElement('button'); b.className='opt'; b.textContent=t;
+      b.onclick=()=>{
+        if(locked) return; locked=true; done++;
+        if(ai===item.g){ b.classList.add('good'); ok++; }
+        else { b.classList.add('bad'); d.querySelectorAll('.opt')[item.g].classList.add('good'); }
+        fb.textContent=(ai===item.g?'✅ ':'❌ ')+item.fb;
+        document.getElementById('qs').textContent=done+' / 5';
+        document.getElementById('qok').textContent=ok;
+      };
+      d.appendChild(b);
+    });
+    d.appendChild(fb);
+    box.appendChild(d);
+  });
+})();
+
+/* ================= 5. ANNOTATIONS CARTE ================= */
+(function(){
+  const btn=document.getElementById('annotBtn');
+  const a=document.getElementById('annots');
+  if(!btn||!a) return;
+  let on=false;
+  btn.onclick=()=>{
+    on=!on;
+    a.setAttribute('opacity', on?'1':'0');
+    btn.textContent = on? '\ud83d\ude48 Cacher les annotations' : '\ud83d\udd0d R\u00e9v\u00e9ler les annotations';
+  };
+})();
+</script>
+</body>
+</html>
