@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RATISS Academy · Fiche 004 — Brochage du Raspberry Pi (40 broches)</title>
+<style>
+  :root{
+    --bg:#0a0e15;--card:#121a26;--card2:#0d141d;--line:#1f2b3d;--txt:#e9f0fa;--dim:#93a6bf;--soft:#6d809b;
+    --p5v:#ff5a6e;--p3v:#ffb547;--gnd:#7b8da6;--gpio:#39e08f;--i2c:#4cc9f0;--spi:#a77bff;
+    --uart:#ffe066;--pwm:#ff8ad4;--id:#8fa3c0;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font-size:17px;line-height:1.7;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding:0 0 70px;
+    background-image:radial-gradient(800px 420px at 12% -5%,rgba(76,201,240,.09),transparent 62%),
+                     radial-gradient(700px 460px at 92% 0%,rgba(57,224,143,.07),transparent 62%)}
+  .wrap{max-width:980px;margin:0 auto;padding:0 18px}
+  header{padding:38px 0 6px}
+  .brand{font-family:var(--mono);font-size:11.5px;letter-spacing:.28em;color:var(--neon,#39e08f);text-transform:uppercase;
+         color:#39e08f}
+  h1{font-size:clamp(27px,5vw,42px);line-height:1.1;margin:.3em 0 .2em;letter-spacing:-.025em}
+  h1 small{display:block;font-size:clamp(15px,2.2vw,18px);font-weight:400;color:var(--dim);margin-top:10px;line-height:1.5}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .chip{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--dim);background:#0e1620}
+  .chip.g{color:#39e08f;border-color:rgba(57,224,143,.35)}
+  section{margin:38px 0}
+  h2{font-size:clamp(19px,3vw,25px);margin:0 0 6px;letter-spacing:-.015em}
+  .lead{color:var(--dim);margin:.4em 0 1em;font-size:16px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.008));
+        border:1px solid var(--line);border-radius:18px;padding:20px}
+  .card+.card{margin-top:14px}
+  p{margin:.6em 0} h3{font-size:16px;margin:1.2em 0 .4em} h3:first-child{margin-top:0}
+  ul,ol{padding-left:22px} li{margin:.3em 0}
+  .mono{font-family:var(--mono)}
+  .note{font-size:14.5px;color:var(--soft);border-left:2px solid var(--line);padding-left:14px;margin:.9em 0}
+  .warn{border-left:3px solid var(--p5v);background:rgba(255,90,110,.07);padding:14px 18px;border-radius:0 14px 14px 0}
+  .good{border-left:3px solid var(--gpio);background:rgba(57,224,143,.06);padding:14px 18px;border-radius:0 14px 14px 0}
+
+  /* ---- HEADER VISUEL ---- */
+  .board-wrap{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
+  @media(max-width:820px){.board-wrap{grid-template-columns:1fr}}
+  .board{background:#0c1420;border:1px solid var(--line);border-radius:18px;padding:16px}
+  .board .topbar{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;
+                 color:var(--soft);letter-spacing:.1em;padding:0 6px 10px}
+  .grid40{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .col{display:flex;flex-direction:column;gap:6px}
+  .pin{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:9px;cursor:pointer;
+       background:#111a26;border:1px solid #23324a;border-left-width:5px;transition:.12s;user-select:none}
+  .pin:hover{background:#172233;transform:translateX(1px)}
+  .pin.sel{background:#1b2a3d;box-shadow:0 0 0 1px currentColor inset}
+  .pin .n{font-family:var(--mono);font-size:11px;color:var(--soft);min-width:20px;text-align:right}
+  .pin .lb{font-family:var(--mono);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .r .pin{flex-direction:row-reverse;border-left-width:1px;border-right-width:5px;text-align:right}
+  .r .pin .n{text-align:left}
+  /* classes de couleur */
+  .c5v{border-left-color:var(--p5v);color:var(--p5v)} .r .c5v{border-right-color:var(--p5v);border-left-color:#23324a}
+  .c3v{border-left-color:var(--p3v);color:var(--p3v)} .r .c3v{border-right-color:var(--p3v);border-left-color:#23324a}
+  .cgnd{border-left-color:var(--gnd);color:var(--gnd)} .r .cgnd{border-right-color:var(--gnd);border-left-color:#23324a}
+  .cgpio{border-left-color:var(--gpio);color:var(--gpio)} .r .cgpio{border-right-color:var(--gpio);border-left-color:#23324a}
+  .ci2c{border-left-color:var(--i2c);color:var(--i2c)} .r .ci2c{border-right-color:var(--i2c);border-left-color:#23324a}
+  .cspi{border-left-color:var(--spi);color:var(--spi)} .r .cspi{border-right-color:var(--spi);border-left-color:#23324a}
+  .cuart{border-left-color:var(--uart);color:var(--uart)} .r .cuart{border-right-color:var(--uart);border-left-color:#23324a}
+  .cpwm{border-left-color:var(--pwm);color:var(--pwm)} .r .cpwm{border-right-color:var(--pwm);border-left-color:#23324a}
+  .cid{border-left-color:var(--id);color:var(--id)} .r .cid{border-right-color:var(--id);border-left-color:#23324a}
+
+  .panel{background:#0c1420;border:1px solid var(--line);border-radius:18px;padding:18px;position:sticky;top:14px}
+  .panel .pn{font-family:var(--mono);font-size:34px;line-height:1;color:#fff}
+  .panel .pt{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--soft)}
+  .panel .badge{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+                padding:3px 9px;border-radius:999px;margin-top:10px;border:1px solid currentColor}
+  .panel ul{margin:10px 0 0;padding-left:18px;font-size:14px;color:var(--dim)}
+  .panel .lbl{font-family:var(--mono);font-size:12px;color:var(--txt);margin-top:12px}
+
+  /* légende */
+  .legend{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  @media(max-width:640px){.legend{grid-template-columns:1fr}}
+  .lg{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--dim)}
+  .sw{width:16px;height:16px;border-radius:4px;flex:none}
+
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--soft);text-transform:uppercase}
+  td.n{font-family:var(--mono);color:var(--dim);text-align:center;width:46px}
+  td.f{font-family:var(--mono);font-size:13px}
+  .pill{display:inline-block;font-family:var(--mono);font-size:10px;padding:1px 7px;border-radius:99px;
+        border:1px solid currentColor;margin-left:4px}
+  footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--line);font-family:var(--mono);
+         font-size:11.5px;color:#5a6b83;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">RATISS Academy · Fiche technique 004</div>
+  <h1>Brochage du Raspberry Pi 🔌
+    <small>Le connecteur 40 broches : chaque pin,<br>sa couleur et sa fonction.</small>
+  </h1>
+  <div class="meta">
+    <span class="chip g">v1.0 · 03/11/2026</span>
+    <span class="chip">B+ · 2 · 3 · 4 · 5 · Zero</span>
+    <span class="chip">clique sur un pin 👆</span>
+  </div>
+</header>
+
+<section>
+  <p class="lead">Vue de dessus, <b>pin 1 en haut à gauche</b>. Le repère fiable sur ta carte :
+  <b>le pad carré</b> (tous les autres sont ronds). 🔍</p>
+
+  <div class="board-wrap">
+    <div class="board">
+      <div class="topbar"><span>◀ CÔTÉ IMPAIR</span><span>PAIR ▶</span></div>
+      <div class="grid40">
+        <div class="col l" id="colL"></div>
+        <div class="col r" id="colR"></div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel">
+      <div class="pt">BROCHE SÉLECTIONNÉE</div>
+      <div class="pn" id="pNum">1</div>
+      <div class="lbl" id="pName">3V3 — alimentation 3,3 V</div>
+      <div class="badge" id="pType" style="color:var(--p3v)">ALIMENTATION 3,3 V</div>
+      <ul id="pList">
+        <li>Une des 2 sources 3,3 V de la carte.</li>
+        <li>Ne jamais y injecter de tension.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>La légende des couleurs 🎨</h3>
+    <div class="legend">
+      <div class="lg"><span class="sw" style="background:#ff5a6e"></span> <b>Rouge</b> — 5 V (alimentation)</div>
+      <div class="lg"><span class="sw" style="background:#ffb547"></span> <b>Orange</b> — 3,3 V (alimentation)</div>
+      <div class="lg"><span class="sw" style="background:#7b8da6"></span> <b>Gris foncé</b> — GND, la masse (0 V)</div>
+      <div class="lg"><span class="sw" style="background:#39e08f"></span> <b>Vert</b> — GPIO « libre », entrée/sortie simple</div>
+      <div class="lg"><span class="sw" style="background:#4cc9f0"></span> <b>Bleu</b> — I²C (bus de capteurs)</div>
+      <div class="lg"><span class="sw" style="background:#a77bff"></span> <b>Violet</b> — SPI (bus rapide)</div>
+      <div class="lg"><span class="sw" style="background:#ffe066"></span> <b>Jaune</b> — UART (liaison série)</div>
+      <div class="lg"><span class="sw" style="background:#ff8ad4"></span> <b>Rose</b> — PWM (variation de puissance)</div>
+      <div class="lg"><span class="sw" style="background:#8fa3c0"></span> <b>Gris clair</b> — ID / EEPROM (réservé HAT)</div>
+    </div>
+    <p class="note">⚠️ <b>Honnêteté :</b> ces couleurs sont <b>ma convention pédagogique</b>, pas un standard.
+    Les fils de ton atelier ne sont pas forcément de ces couleurs — <b>c'est le numéro et le nom du pin qui comptent</b>,
+    jamais la couleur du fil. Un pin peut aussi cumuler plusieurs fonctions (ex. GPIO18 = GPIO + PWM).</p>
+  </div>
+</section>
+
+<section>
+  <h2>⚠️ Le piège n°1 : numéro physique ≠ numéro BCM</h2>
+  <div class="card">
+    <p>Il existe <b>deux numérotations</b>, et elles ne coïncident pas. C'est l'erreur qui fait perdre une soirée entière. 😵</p>
+    <table>
+      <thead><tr><th>Numérotation</th><th>Ce qu'elle compte</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td><b>Physique</b><br><span class="mono" style="font-size:12px">BOARD</span></td>
+          <td>La position sur le connecteur, de 1 à 40.</td>
+          <td>Pin 11 = la 11ᵉ broche en partant du coin.</td></tr>
+        <tr><td><b>BCM</b> (Broadcom)<br><span class="mono" style="font-size:12px">GPIO</span></td>
+          <td>Le nom du signal dans la puce. C'est celui qu'on utilise <b>dans le code</b>.</td>
+          <td>GPIO17 = le <b>pin physique 11</b>.</td></tr>
+      </tbody>
+    </table>
+    <div class="warn">
+      <b>Exemple qui pique :</b> « GPIO17 » n'est <b>pas</b> sur le pin 17. Le pin 17, c'est du <b>3,3 V</b>.
+      GPIO17 est sur le <b>pin 11</b>. Et le pin 17 est une <b>alimentation</b> — y brancher une LED « pour tester »
+      revient à l'alimenter en direct. 🤕
+    </div>
+    <p class="good"><b>Le réflexe :</b> sur un schéma ou un tutoriel, cherche toujours <b>« BCM »</b> ou <b>« GPIO »</b>.
+    Si c'est écrit « pin 12 » sans préciser, demande-toi : physique ou BCM ? Dans le doute, <b>vérifie avec cette fiche</b>.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Les 40 pins, un par un 📋</h2>
+  <div class="card">
+    <table id="fulltable">
+      <thead><tr><th>Pin</th><th>Nom</th><th>Type</th><th>Fonctions</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>Les 5 groupes à connaître par cœur 🧠</h2>
+  <div class="card">
+    <table>
+      <thead><tr><th>Groupe</th><th>Pins</th><th>À quoi ça sert</th></tr></thead>
+      <tbody>
+        <tr><td><b style="color:#ff5a6e">5 V</b></td><td class="f">2, 4</td><td>Alimenter un module gourmand (relais, écran). <b>Jamais sur un GPIO.</b></td></tr>
+        <tr><td><b style="color:#ffb547">3,3 V</b></td><td class="f">1, 17</td><td>Alimenter un petit capteur. C'est la tension logique de la carte.</td></tr>
+        <tr><td><b style="color:#7b8da6">GND</b></td><td class="f">6, 9, 14, 20, 25, 30, 34, 39</td><td>La masse. <b>Tout circuit doit partager un GND</b>, sinon rien ne fonctionne.</td></tr>
+        <tr><td><b style="color:#4cc9f0">I²C</b></td><td class="f">3 (SDA) · 5 (SCL)</td><td>Le bus de RATISS-GRID : INA219, écran OLED SSD1306.</td></tr>
+        <tr><td><b style="color:#a77bff">SPI0</b></td><td class="f">19 · 21 · 23 · 24 · 26</td><td>Écrans rapides, cartes SD, convertisseurs.</td></tr>
+      </tbody>
+    </table>
+    <p class="note">À ajouter : <b>UART</b> pins 8 (TX) et 10 (RX) · <b>PWM matériel</b> pins 12, 32, 33, 35 ·
+    <b>ID/EEPROM</b> pins 27 et 28 — <b>à ne pas utiliser</b>, réservés à l'identification des cartes HAT.</p>
+  </div>
+</section>
+
+<section>
+  <h2>🛑 Sécurité électrique — les 4 règles</h2>
+  <div class="card warn">
+    <ol style="margin:0">
+      <li><b>Un GPIO ne supporte que 3,3 V.</b> Y envoyer du 5 V = destruction du pin, parfois de la carte.</li>
+      <li><b>Un GPIO fournit très peu de courant</b> (ordre de grandeur : ~16 mA par pin, budget total limité).
+      Une LED oui, un moteur <b>non</b> — il faut un transistor ou un driver.</li>
+      <li><b>Jamais de court-circuit entre 5 V et GND</b>, ni entre 3,3 V et GND.</li>
+      <li><b>Ne jamais relier un GPIO directement à du 230 V.</b> Jamais. Même avec ton maître.</li>
+    </ol>
+    <p class="note" style="margin-bottom:0">📏 Les chiffres exacts de courant dépendent du modèle. Consulte la
+    documentation officielle de <b>ta</b> carte avant de dimensionner quoi que ce soit.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Exemple concret : ta première LED sur le Pi 🔴</h2>
+  <div class="card">
+    <svg viewBox="0 0 720 210" style="display:block;max-width:100%;margin:8px auto">
+      <rect x="250" y="20" width="220" height="170" rx="14" fill="#0c1a12" stroke="#2b6349" stroke-width="2"/>
+      <text x="360" y="46" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12" fill="#39e08f">RASPBERRY PI</text>
+      <!-- header 2x20 mini -->
+      <g font-family="ui-monospace,monospace" font-size="8" text-anchor="middle">
+        <g fill="#23324a">
+          <rect x="290" y="60" width="14" height="10" rx="2"/><rect x="308" y="60" width="14" height="10" rx="2"/>
+          <rect x="290" y="74" width="14" height="10" rx="2"/><rect x="308" y="74" width="14" height="10" rx="2"/>
+          <rect x="290" y="88" width="14" height="10" rx="2"/><rect x="308" y="88" width="14" height="10" rx="2"/>
+        </g>
+        <rect x="290" y="88" width="14" height="10" rx="2" fill="#39e08f"/>
+        <rect x="290" y="60" width="14" height="10" rx="2" fill="#ffb547"/>
+        <text x="297" y="112" fill="#ffb547">1</text><text x="297" y="86" fill="#39e08f">11</text>
+      </g>
+      <!-- fils -->
+      <path d="M297,95 V160 H420" fill="none" stroke="#39e08f" stroke-width="3"/>
+      <path d="M297,65 V175 H420" fill="none" stroke="#7b8da6" stroke-width="3"/>
+      <!-- résistance -->
+      <rect x="420" y="146" width="80" height="26" rx="4" fill="#e9f0fa" stroke="#9fb3cc" stroke-width="2"/>
+      <text x="460" y="164" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#0a1219">330 Ω</text>
+      <path d="M500,160 H545" fill="none" stroke="#39e08f" stroke-width="3"/>
+      <!-- LED -->
+      <polygon points="545,148 545,172 575,160" fill="#ffb547"/>
+      <line x1="575" y1="146" x2="575" y2="174" stroke="#e9f0fa" stroke-width="3"/>
+      <path d="M575,160 H610 V175 H297" fill="none" stroke="#7b8da6" stroke-width="3"/>
+      <g font-family="ui-monospace,monospace" font-size="10" fill="#93a6bf">
+        <text x="300" y="192">GPIO17 (pin 11)</text>
+        <text x="600" y="192" text-anchor="end">GND (pin 9)</text>
+      </g>
+    </svg>
+    <table>
+      <thead><tr><th>Fil</th><th>Va sur</th><th>Pourquoi</th></tr></thead>
+      <tbody>
+        <tr><td>Signal</td><td><b>pin 11</b> = GPIO17 (BCM)</td><td>On le commande depuis le code.</td></tr>
+        <tr><td>Retour</td><td><b>pin 9</b> = GND</td><td>Sans masse commune, aucun courant ne circule.</td></tr>
+        <tr><td>Résistance</td><td><b>330 Ω en série</b></td><td>Sinon la LED et/ou le pin grillent.</td></tr>
+      </tbody>
+    </table>
+    <p class="note">🔎 Le calcul est celui de la leçon 001 : R = (U − U<sub>LED</sub>) / I = (3,3 − 2) / 0,010 ≈ <b>130 Ω</b>
+    pour 10 mA. On prend <b>220 Ω</b> pour être tranquille. Le <b>330 Ω</b> du schéma donne ~4 mA : ça éclaire moins,
+    mais c'est parfaitement sûr — et avec 130 Ω tu es déjà à 10 mA, proche de la limite confortable du pin.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Note Raspberry Pi 5 🆕</h2>
+  <div class="card">
+    <p>Le <b>connecteur est identique</b> (même position, mêmes 40 pins, même pin 1).
+    Mais l'électronique derrière a changé : les GPIO passent par un contrôleur dédié <b>RP1</b>.
+    Conséquence pratique : <b>certaines fonctions alternatives ne sont plus sur les mêmes pins</b>
+    (par exemple GPIO17/27/22/16/20/21 héritent de fonctions SPI1/UART1 différentes).</p>
+    <p class="good" style="margin-bottom:0">✅ <b>Ce qui ne change pas :</b> les alimentations (5 V, 3,3 V, GND), l'I²C sur pins 3/5,
+    le SPI0 sur pins 19/21/23/24, l'UART sur 8/10, et le PWM sur 12/32/33. Le tableau ci-dessus reste valable pour l'usage débutant.</p>
+  </div>
+</section>
+
+<footer>
+  RATISS Academy · Fiche 004 — Brochage du Raspberry Pi · v1.0 · 03/11/2026<br>
+  Brochage vérifié sur sources publiques (Raspberry Pi Foundation / références croisées) — voir section Pi 5 pour les nuances.<br>
+  Les couleurs sont une convention pédagogique. Le repère fiable : le <b>numéro</b> et le <b>nom BCM</b>.
+</footer>
+
+</div>
+
+<script>
+const PINS = [
+ {n:1, cls:'c3v', name:'3V3', type:'ALIMENTATION 3,3 V', color:'#ffb547',
+  desc:['Source 3,3 V n°1','Alimente un petit capteur','Ne jamais y injecter de tension','Budget de courant limité']},
+ {n:2, cls:'c5v', name:'5V', type:'ALIMENTATION 5 V', color:'#ff5a6e',
+  desc:['Source 5 V n°1','Pour un module gourmand (relais, écran)','Jamais reliée à un GPIO','Directement issue de l\'alimentation USB']},
+ {n:3, cls:'ci2c', name:'GPIO2 · SDA1', type:'I²C — données', color:'#4cc9f0',
+  desc:['SDA = la ligne de données','Avec SCL (pin 5) forme le bus I²C n°1','Utilisé par l\'INA219 et l\'écran OLED de RATISS-GRID','A une résistance de tirage interne vers 3,3 V']},
+ {n:4, cls:'c5v', name:'5V', type:'ALIMENTATION 5 V', color:'#ff5a6e',
+  desc:['Source 5 V n°2','Identique au pin 2']},
+ {n:5, cls:'ci2c', name:'GPIO3 · SCL1', type:'I²C — horloge', color:'#4cc9f0',
+  desc:['SCL = l\'horloge du bus','Toujours associée à SDA (pin 3)','Ne pas utiliser comme sortie simple']},
+ {n:6, cls:'cgnd', name:'GND', type:'MASSE (0 V)', color:'#7b8da6',
+  desc:['Masse n°1 sur 8','Tous les GND sont reliés entre eux','Prends le GND le plus proche de ton signal']},
+ {n:7, cls:'cgpio', name:'GPIO4 · GPCLK0', type:'GPIO libre', color:'#39e08f',
+  desc:['Entrée/sortie numérique simple','Peut aussi sortir une horloge (GPCLK0)','Bon choix pour un bouton ou une LED']},
+ {n:8, cls:'cuart', name:'GPIO14 · TXD0', type:'UART — émission', color:'#ffe066',
+  desc:['TX = ce que le Pi envoie','Avec RX (pin 10) forme le port série','⚠️ Sert de console série au démarrage : il faut la désactiver pour l\'utiliser']},
+ {n:9, cls:'cgnd', name:'GND', type:'MASSE (0 V)', color:'#7b8da6',
+  desc:['Masse n°2','Voisin du pin 11 (GPIO17) : pratique pour une LED']},
+ {n:10, cls:'cuart', name:'GPIO15 · RXD0', type:'UART — réception', color:'#ffe066',
+  desc:['RX = ce que le Pi reçoit','Toujours croiser : TX du Pi → RX du module']},
+ {n:11, cls:'cgpio', name:'GPIO17', type:'GPIO libre', color:'#39e08f',
+  desc:['Le GPIO le plus utilisé par les débutants','Pin de la LED dans l\'exemple de cette fiche','⚠️ GPIO17 ≠ pin 17 !']},
+ {n:12, cls:'cpwm', name:'GPIO18 · PWM0', type:'PWM matériel + GPIO', color:'#ff8ad4',
+  desc:['PWM matériel = variation de puissance propre','Servo, LED qui varient en douceur','Aussi PCM_CLK (audio)','Reconnu comme le PWM le plus fiable de la carte']},
+ {n:13, cls:'cgpio', name:'GPIO27', type:'GPIO libre', color:'#39e08f',
+  desc:['Entrée/sortie numérique simple','Souvent utilisé en bouton poussoir']},
+ {n:14, cls:'cgnd', name:'GND', type:'MASSE (0 V)', color:'#7b8da6', desc:['Masse n°3']},
+ {n:15, cls:'cgpio', name:'GPIO22', type:'GPIO libre', color:'#39e08f',
+  desc:['Entrée/sortie numérique simple','Sans fonction particulière au démarrage : sûr pour débuter']},
+ {n:16, cls:'cgpio', name:'GPIO23', type:'GPIO libre', color:'#39e08f', desc:['Entrée/sortie numérique simple']},
+ {n:17, cls:'c3v', name:'3V3', type:'ALIMENTATION 3,3 V', color:'#ffb547',
+  desc:['Source 3,3 V n°2','⚠️ Attention : c\'est une ALIMENTATION, pas un GPIO','Beaucoup confondent avec « GPIO17 »']},
+ {n:18, cls:'cgpio', name:'GPIO24', type:'GPIO libre', color:'#39e08f', desc:['Entrée/sortie numérique simple']},
+ {n:19, cls:'cspi', name:'GPIO10 · MOSI', type:'SPI0', color:'#a77bff',
+  desc:['MOSI = données du Pi vers le module','Avec MISO, SCLK et CE0 forme SPI0']},
+ {n:20, cls:'cgnd', name:'GND', type:'MASSE (0 V)', color:'#7b8da6', desc:['Masse n°4 — juste à côté du SPI0']},
+ {n:21, cls:'cspi', name:'GPIO9 · MISO', type:'SPI0', color:'#a77bff',
+  desc:['MISO = données du module vers le Pi']},
+ {n:22, cls:'cgpio', name:'GPIO25', type:'GPIO libre', color:'#39e08f', desc:['Entrée/sortie numérique simple']},
+ {n:23, cls:'cspi', name:'GPIO11 · SCLK', type:'SPI0', color:'#a77bff',
+  desc:['SCLK = l\'horloge du bus SPI']},
+ {n:24, cls:'cspi', name:'GPIO8 · CE0', type:'SPI0', color:'#a77bff',
+  desc:['CE0 = sélection du périphérique n°0','Un bus SPI peut piloter plusieurs modules, chacun avec son CE']},
+ {n:25, cls:'cgnd', name:'GND', type:'MASSE (0 V)', color:'#7b8da6', desc:['Masse n°5']},
+ {n:26, cls:'cspi', name:'GPIO7 · CE1', type:'SPI0', color:'#a77bff',
+  desc:['CE1 = sélection du périphérique n°1']},
+ {n:27, cls:'cid', name:'GPIO0 · ID_SD', type:'RÉSERVÉ — EEPROM HAT', color:'#8fa3c0',
+  desc:['⚠️ Réservé à l\'identification des cartes HAT','Ne pas utiliser pour un montage','Y toucher peut empêcher le démarrage']},
+ {n:28, cls:'cid', name:'GPIO1 · ID_SC', type:'RÉSERVÉ — EEPROM HAT', color:'#8fa3c0',
+  desc:['⚠️ Réservé, comme le pin 27','Laisser libre']},
+ {n:29, cls:'cgpio', name:'GPIO5', type:'GPIO libre', color:'#39e08f', desc:['Entrée/sortie numérique simple']},
+ {n:30, cls:'cgnd', name:'GND', type:'MASSE (0 V)', color:'#7b8da6', desc:['Masse n°6']},
+ {n:31, cls:'cgpio', name:'GPIO6', type:'GPIO libre', color:'#39e08f', desc:['Entrée/sortie numérique simple']},
+ {n:32, cls:'cpwm', name:'GPIO12 · PWM0', type:'PWM matériel + GPIO', color:'#ff8ad4',
+  desc:['PWM matériel, même canal que GPIO18','Utile pour un variateur de LED']},
+ {n:33, cls:'cpwm', name:'GPIO13 · PWM1', type:'PWM matériel + GPIO', color:'#ff8ad4',
+  desc:['PWM matériel, canal indépendant de 12/18','Deux PWM séparés : GPIO13 et GPIO18']},
+ {n:34, cls:'cgnd', name:'GND', type:'MASSE (0 V)', color:'#7b8da6', desc:['Masse n°7']},
+ {n:35, cls:'cgpio', name:'GPIO19', type:'GPIO libre (PCM/SPI1)', color:'#39e08f',
+  desc:['GPIO simple','Peut aussi faire PCM_FS, PWM1 ou SPI1 (MISO)','Éviter si tu as besoin de ces fonctions']},
+ {n:36, cls:'cgpio', name:'GPIO16', type:'GPIO libre (SPI1)', color:'#39e08f',
+  desc:['GPIO simple','Peut aussi faire CE2 de SPI1']},
+ {n:37, cls:'cgpio', name:'GPIO26', type:'GPIO libre', color:'#39e08f', desc:['Entrée/sortie numérique simple']},
+ {n:38, cls:'cgpio', name:'GPIO20', type:'GPIO libre (SPI1)', color:'#39e08f',
+  desc:['GPIO simple','Peut aussi faire MOSI de SPI1']},
+ {n:39, cls:'cgnd', name:'GND', type:'MASSE (0 V)', color:'#7b8da6', desc:['Masse n°8 — la dernière']},
+ {n:40, cls:'cgpio', name:'GPIO21', type:'GPIO libre (SPI1)', color:'#39e08f',
+  desc:['GPIO simple','Peut aussi faire SCLK de SPI1']}
+];
+
+(function(){
+  const colL=document.getElementById('colL'), colR=document.getElementById('colR');
+  const pNum=document.getElementById('pNum'), pName=document.getElementById('pName');
+  const pType=document.getElementById('pType'), pList=document.getElementById('pList');
+  const tbody=document.querySelector('#fulltable tbody');
+
+  function select(p, el){
+    document.querySelectorAll('.pin').forEach(x=>x.classList.remove('sel'));
+    el.classList.add('sel');
+    pNum.textContent=p.n;
+    pNum.style.color=p.color;
+    pName.textContent=p.name;
+    pType.textContent=p.type;
+    pType.style.color=p.color;
+    pList.innerHTML=p.desc.map(d=>'<li>'+d+'</li>').join('');
+  }
+
+  PINS.forEach(p=>{
+    const b=document.createElement('div');
+    b.className='pin '+p.cls;
+    b.innerHTML='<span class="n">'+p.n+'</span><span class="lb">'+p.name+'</span>';
+    b.onclick=()=>select(p,b);
+    (p.n%2===1?colL:colR).appendChild(b);
+    if(p.n===1) setTimeout(()=>select(p,b),0);
+
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td class="n">'+p.n+'</td><td class="f" style="color:'+p.color+'">'+p.name+'</td>'+
+      '<td class="f" style="font-size:11.5px;color:#93a6bf">'+p.type+'</td>'+
+      '<td style="font-size:13px;color:#93a6bf">'+p.desc[0]+'</td>';
+    tbody.appendChild(tr);
+  });
+})();
+</script>
+</body>
+</html>
