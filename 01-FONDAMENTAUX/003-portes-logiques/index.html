@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RATISS Academy · Leçon 003 — Les portes logiques</title>
+<style>
+  :root{--bg:#0a0e15;--card:#121a26;--card2:#0d141d;--line:#1f2b3d;--txt:#e9f0fa;--dim:#93a6bf;
+        --soft:#6d809b;--neon:#39e08f;--cyan:#4cc9f0;--amber:#ffb547;--red:#ff6b7d;--violet:#a77bff;
+        --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font-size:17px;line-height:1.72;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding:0 0 70px;
+    background-image:radial-gradient(800px 400px at 12% -5%,rgba(57,224,143,.08),transparent 62%),
+                     radial-gradient(700px 460px at 92% 0%,rgba(167,123,255,.08),transparent 62%)}
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px}
+  header{padding:40px 0 8px}
+  .brand{font-family:var(--mono);font-size:11.5px;letter-spacing:.28em;color:var(--neon);text-transform:uppercase}
+  h1{font-size:clamp(28px,5vw,44px);line-height:1.1;margin:.3em 0 .2em;letter-spacing:-.025em}
+  h1 small{display:block;font-size:clamp(15px,2.2vw,19px);font-weight:400;color:var(--dim);margin-top:10px;line-height:1.5}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .chip{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--dim);background:#0e1620}
+  .chip.g{color:var(--neon);border-color:rgba(57,224,143,.35)}
+  .chip.a{color:var(--amber);border-color:rgba(255,181,71,.35)}
+  section{margin:40px 0}
+  .step{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+  .num{font-family:var(--mono);font-size:clamp(26px,5vw,40px);color:rgba(57,224,143,.28);font-weight:700;line-height:1}
+  h2{font-size:clamp(20px,3vw,26px);margin:0;letter-spacing:-.015em}
+  .lead{color:var(--dim);margin:.4em 0 1em;font-size:16.5px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.008));
+        border:1px solid var(--line);border-radius:18px;padding:22px}
+  .card+.card{margin-top:16px}
+  .card.hi{border-color:rgba(57,224,143,.32)}
+  p{margin:.6em 0} h3{font-size:16.5px;margin:1.2em 0 .4em} h3:first-child{margin-top:0}
+  ul,ol{padding-left:22px} li{margin:.3em 0}
+  .mono{font-family:var(--mono)}
+  .note{font-size:14.5px;color:var(--soft);border-left:2px solid var(--line);padding-left:14px;margin:.9em 0}
+  .good{border-left:3px solid var(--neon);background:rgba(57,224,143,.06);padding:14px 18px;border-radius:0 14px 14px 0}
+  .svgbox{background:#0b1119;border:1px solid var(--line);border-radius:16px;padding:14px;margin:16px 0}
+  svg{display:block;max-width:100%;height:auto;margin:0 auto}
+  .tbl{width:100%;border-collapse:collapse;font-size:15px;margin:8px 0}
+  .tbl th,.tbl td{text-align:center;padding:8px 10px;border-bottom:1px solid var(--line)}
+  .tbl th{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--soft);text-transform:uppercase}
+  .tbl td:first-child,.tbl th:first-child{text-align:left}
+  .gate{background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:16px;text-align:center}
+  .gate h4{margin:0 0 4px;font-size:16px}
+  .gate .rule{font-size:13.5px;color:var(--dim);margin-top:8px;min-height:40px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  @media(max-width:760px){.grid2,.grid3{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.grid2,.grid3{grid-template-columns:1fr}}
+  .opt{display:block;width:100%;text-align:left;margin:7px 0;font-size:15px;padding:11px 16px;border-radius:12px;
+       cursor:pointer;background:#17222f;color:var(--txt);border:1px solid #27384f;font-family:inherit}
+  .opt:hover{background:#1d2b3c}
+  .opt.good{background:rgba(57,224,143,.15);border-color:var(--neon);color:var(--neon)}
+  .opt.bad{background:rgba(255,107,125,.13);border-color:var(--red);color:var(--red)}
+  .fb{font-size:14.5px;color:var(--dim);margin-top:8px;min-height:22px}
+  .q{border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0;background:var(--card2)}
+  .q p{font-weight:600;margin:0 0 12px}
+  .readout{font-family:var(--mono);background:#070c12;border:1px solid var(--line);border-radius:14px;padding:16px 18px;color:var(--dim);font-size:14px}
+
+  /* simulateur */
+  .sim{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin:10px 0 20px}
+  @media(max-width:600px){.sim{grid-template-columns:1fr;text-align:center}}
+  .swbig{display:block;width:100%;padding:18px;border-radius:16px;font-family:var(--mono);font-size:15px;
+         cursor:pointer;background:#17222f;border:2px solid #27384f;color:var(--txt);transition:.15s}
+  .swbig.on{background:rgba(57,224,143,.13);border-color:var(--neon);color:var(--neon);box-shadow:0 0 22px -8px var(--neon)}
+  .swbig .state{display:block;font-size:34px;font-weight:700;line-height:1.1;margin-top:6px}
+  .outgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  @media(max-width:520px){.outgrid{grid-template-columns:1fr 1fr}}
+  .outbox{background:#070c12;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+  .outbox .n{font-family:var(--mono);font-size:11px;color:var(--soft);letter-spacing:.1em}
+  .outbox .v{font-family:var(--mono);font-size:28px;line-height:1.2;color:var(--dim)}
+  .outbox .v.one{color:var(--neon)}
+  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);font-family:var(--mono);font-size:12px;color:#5a6b83;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">RATISS Academy · Électronique · Leçon 003</div>
+  <h1>Les portes logiques 🚦
+    <small>Un circuit qui réfléchit avec deux mots :<br>0 et 1.</small>
+  </h1>
+  <div class="meta">
+    <span class="chip g">version 1.0</span><span class="chip">03/11/2026</span>
+    <span class="chip">25 min</span><span class="chip a">aucun prérequis</span>
+  </div>
+</header>
+
+<!-- 1 -->
+<section>
+  <div class="step"><span class="num">01</span><h2>Une porte = une règle</h2></div>
+  <p class="lead">Oublie l'électronique deux secondes. Pense <b>interrupteurs</b>. 💡</p>
+
+  <div class="card hi">
+    <div class="svgbox">
+      <svg viewBox="0 0 720 220">
+        <!-- circuit série : 2 interrupteurs -->
+        <g font-family="ui-monospace,monospace" font-size="11">
+          <text x="180" y="24" text-anchor="middle" fill="#93a6bf">EN SÉRIE → porte AND</text>
+          <line x1="40" y1="70" x2="90" y2="70" stroke="#3a5170" stroke-width="3"/>
+          <line x1="90" y1="70" x2="150" y2="46" stroke="#39e08f" stroke-width="3"/>
+          <circle cx="90" cy="70" r="4" fill="#93a6bf"/><circle cx="150" cy="70" r="4" fill="#93a6bf"/>
+          <line x1="150" y1="70" x2="200" y2="70" stroke="#3a5170" stroke-width="3"/>
+          <line x1="200" y1="70" x2="260" y2="46" stroke="#39e08f" stroke-width="3"/>
+          <circle cx="200" cy="70" r="4" fill="#93a6bf"/><circle cx="260" cy="70" r="4" fill="#93a6bf"/>
+          <line x1="260" y1="70" x2="320" y2="70" stroke="#3a5170" stroke-width="3"/>
+          <circle cx="345" cy="70" r="16" fill="#ffb547" opacity=".35"/>
+          <circle cx="345" cy="70" r="9" fill="#ffb547"/>
+          <text x="180" y="110" text-anchor="middle" fill="#6d809b">il faut les DEUX fermés</text>
+
+          <!-- parallèle : porte OR -->
+          <text x="540" y="24" text-anchor="middle" fill="#93a6bf">EN PARALLÈLE → porte OR</text>
+          <path d="M400,70 H430 V46 H490 V70 H520" fill="none" stroke="#3a5170" stroke-width="3"/>
+          <path d="M400,70 H430 V96 H490 V70 H520" fill="none" stroke="#3a5170" stroke-width="3"/>
+          <line x1="450" y1="46" x2="478" y2="58" stroke="#39e08f" stroke-width="3"/>
+          <line x1="450" y1="96" x2="478" y2="108" stroke="#39e08f" stroke-width="3"/>
+          <circle cx="430" cy="70" r="4" fill="#93a6bf"/><circle cx="490" cy="70" r="4" fill="#93a6bf"/>
+          <line x1="520" y1="70" x2="560" y2="70" stroke="#3a5170" stroke-width="3"/>
+          <circle cx="585" cy="70" r="16" fill="#ffb547" opacity=".35"/>
+          <circle cx="585" cy="70" r="9" fill="#ffb547"/>
+          <text x="540" y="130" text-anchor="middle" fill="#6d809b">un seul fermé suffit</text>
+        </g>
+        <!-- bas : 0 et 1 -->
+        <rect x="40" y="150" width="300" height="52" rx="12" fill="#0f1a26" stroke="#27384f"/>
+        <text x="190" y="182" text-anchor="middle" font-family="ui-monospace,monospace" font-size="13" fill="#e9f0fa">
+          <tspan fill="#6d809b">0</tspan> = éteint · faux &nbsp;&nbsp; <tspan fill="#39e08f">1</tspan> = allumé · vrai</text>
+        <rect x="380" y="150" width="300" height="52" rx="12" fill="#0b1a14" stroke="#39e08f"/>
+        <text x="530" y="182" text-anchor="middle" font-family="ui-monospace,monospace" font-size="13" fill="#39e08f">
+          une porte = une PRISE DE DÉCISION</text>
+      </svg>
+    </div>
+    <p><b>Une porte logique</b>, c'est un petit circuit qui reçoit <b>une ou deux entrées</b> (0 ou 1)
+    et qui donne <b>une sortie</b> (0 ou 1) selon une règle fixe. C'est tout. 🤯</p>
+    <p class="note">Physiquement, 0 et 1 sont des <b>niveaux de tension</b>. Selon la technologie, 0 V peut
+    valoir « 0 » et 3,3 V ou 5 V valent « 1 ». Ce ne sont pas des valeurs universelles.</p>
+  </div>
+</section>
+
+<!-- 2 -->
+<section>
+  <div class="step"><span class="num">02</span><h2>Les 4 portes à comprendre</h2></div>
+  <p class="lead">Quatre. Pas sept. Les trois autres sont juste <b>« celle-là, mais à l'envers »</b>. 🎯</p>
+
+  <div class="grid2">
+    <div class="gate">
+      <h4>AND — « ET »</h4>
+      <svg viewBox="0 0 200 110" style="max-width:200px">
+        <line x1="20" y1="35" x2="60" y2="35" stroke="#4cc9f0" stroke-width="2.5"/>
+        <line x1="20" y1="75" x2="60" y2="75" stroke="#4cc9f0" stroke-width="2.5"/>
+        <path d="M60,15 H100 A35,35 0 0 1 100,95 H60 Z" fill="rgba(57,224,143,.10)" stroke="#39e08f" stroke-width="3"/>
+        <line x1="135" y1="55" x2="180" y2="55" stroke="#ffb547" stroke-width="2.5"/>
+        <text x="16" y="30" font-family="ui-monospace,monospace" font-size="11" fill="#4cc9f0">A</text>
+        <text x="16" y="70" font-family="ui-monospace,monospace" font-size="11" fill="#4cc9f0">B</text>
+        <text x="184" y="50" font-family="ui-monospace,monospace" font-size="11" fill="#ffb547">S</text>
+      </svg>
+      <table class="tbl">
+        <thead><tr><th>A</th><th>B</th><th>S</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>0</td><td>1</td><td>0</td></tr>
+          <tr><td>1</td><td>0</td><td>0</td></tr>
+          <tr><td>1</td><td>1</td><td><b style="color:#39e08f">1</b></td></tr>
+        </tbody>
+      </table>
+      <div class="rule">Les <b>deux</b> entrées doivent être à 1.</div>
+    </div>
+
+    <div class="gate">
+      <h4>OR — « OU »</h4>
+      <svg viewBox="0 0 200 110" style="max-width:200px">
+        <line x1="20" y1="35" x2="62" y2="35" stroke="#4cc9f0" stroke-width="2.5"/>
+        <line x1="20" y1="75" x2="62" y2="75" stroke="#4cc9f0" stroke-width="2.5"/>
+        <path d="M55,15 C80,15 110,25 138,55 C110,85 80,95 55,95 C72,72 72,38 55,15 Z"
+              fill="rgba(57,224,143,.10)" stroke="#39e08f" stroke-width="3"/>
+        <line x1="138" y1="55" x2="180" y2="55" stroke="#ffb547" stroke-width="2.5"/>
+        <text x="16" y="30" font-family="ui-monospace,monospace" font-size="11" fill="#4cc9f0">A</text>
+        <text x="16" y="70" font-family="ui-monospace,monospace" font-size="11" fill="#4cc9f0">B</text>
+        <text x="184" y="50" font-family="ui-monospace,monospace" font-size="11" fill="#ffb547">S</text>
+      </svg>
+      <table class="tbl">
+        <thead><tr><th>A</th><th>B</th><th>S</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>0</td><td>1</td><td><b style="color:#39e08f">1</b></td></tr>
+          <tr><td>1</td><td>0</td><td><b style="color:#39e08f">1</b></td></tr>
+          <tr><td>1</td><td>1</td><td><b style="color:#39e08f">1</b></td></tr>
+        </tbody>
+      </table>
+      <div class="rule">Au moins <b>une</b> entrée à 1 suffit.</div>
+    </div>
+
+    <div class="gate">
+      <h4>NOT — « NON »</h4>
+      <svg viewBox="0 0 200 110" style="max-width:200px">
+        <line x1="20" y1="55" x2="70" y2="55" stroke="#4cc9f0" stroke-width="2.5"/>
+        <path d="M70,25 L70,85 L120,55 Z" fill="rgba(57,224,143,.10)" stroke="#39e08f" stroke-width="3"/>
+        <circle cx="128" cy="55" r="7" fill="#0b1119" stroke="#39e08f" stroke-width="3"/>
+        <line x1="135" y1="55" x2="180" y2="55" stroke="#ffb547" stroke-width="2.5"/>
+        <text x="16" y="50" font-family="ui-monospace,monospace" font-size="11" fill="#4cc9f0">A</text>
+        <text x="184" y="50" font-family="ui-monospace,monospace" font-size="11" fill="#ffb547">S</text>
+      </svg>
+      <table class="tbl">
+        <thead><tr><th>A</th><th>S</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td><b style="color:#39e08f">1</b></td></tr>
+          <tr><td>1</td><td>0</td></tr>
+        </tbody>
+      </table>
+      <div class="rule">Elle <b>inverse</b>. C'est un miroir.</div>
+    </div>
+
+    <div class="gate">
+      <h4>XOR — « OU exclusif »</h4>
+      <svg viewBox="0 0 200 110" style="max-width:200px">
+        <line x1="20" y1="35" x2="55" y2="35" stroke="#4cc9f0" stroke-width="2.5"/>
+        <line x1="20" y1="75" x2="55" y2="75" stroke="#4cc9f0" stroke-width="2.5"/>
+        <path d="M48,15 C73,15 103,25 131,55 C103,85 73,95 48,95 C65,72 65,38 48,15 Z"
+              fill="rgba(57,224,143,.10)" stroke="#39e08f" stroke-width="3"/>
+        <path d="M40,15 C57,38 57,72 40,95" fill="none" stroke="#39e08f" stroke-width="3"/>
+        <line x1="131" y1="55" x2="180" y2="55" stroke="#ffb547" stroke-width="2.5"/>
+        <text x="16" y="30" font-family="ui-monospace,monospace" font-size="11" fill="#4cc9f0">A</text>
+        <text x="16" y="70" font-family="ui-monospace,monospace" font-size="11" fill="#4cc9f0">B</text>
+        <text x="184" y="50" font-family="ui-monospace,monospace" font-size="11" fill="#ffb547">S</text>
+      </svg>
+      <table class="tbl">
+        <thead><tr><th>A</th><th>B</th><th>S</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>0</td><td>1</td><td><b style="color:#39e08f">1</b></td></tr>
+          <tr><td>1</td><td>0</td><td><b style="color:#39e08f">1</b></td></tr>
+          <tr><td>1</td><td>1</td><td>0</td></tr>
+        </tbody>
+      </table>
+      <div class="rule">Les entrées doivent être <b>différentes</b>. (L'arc en plus = le « exclusif ».)</div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section>
+  <div class="step"><span class="num">03</span><h2>Les 3 dérivées</h2></div>
+  <p class="lead">Même symbole, <b>plus un petit rond</b> à la sortie. Le rond = l'inverse. 🔵</p>
+
+  <div class="grid3">
+    <div class="gate">
+      <h4>NAND</h4>
+      <svg viewBox="0 0 200 110" style="max-width:180px">
+        <line x1="16" y1="35" x2="52" y2="35" stroke="#4cc9f0" stroke-width="2.5"/>
+        <line x1="16" y1="75" x2="52" y2="75" stroke="#4cc9f0" stroke-width="2.5"/>
+        <path d="M52,15 H88 A35,35 0 0 1 88,95 H52 Z" fill="rgba(167,123,255,.10)" stroke="#a77bff" stroke-width="3"/>
+        <circle cx="130" cy="55" r="7" fill="#0b1119" stroke="#a77bff" stroke-width="3"/>
+        <line x1="137" y1="55" x2="180" y2="55" stroke="#ffb547" stroke-width="2.5"/>
+      </svg>
+      <table class="tbl">
+        <thead><tr><th>A</th><th>B</th><th>S</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td>1</td></tr><tr><td>0</td><td>1</td><td>1</td></tr>
+          <tr><td>1</td><td>0</td><td>1</td></tr><tr><td>1</td><td>1</td><td><b>0</b></td></tr>
+        </tbody>
+      </table>
+      <div class="rule">AND <b>inversé</b> : 0 seulement si 1 et 1.</div>
+    </div>
+
+    <div class="gate">
+      <h4>NOR</h4>
+      <svg viewBox="0 0 200 110" style="max-width:180px">
+        <line x1="16" y1="35" x2="52" y2="35" stroke="#4cc9f0" stroke-width="2.5"/>
+        <line x1="16" y1="75" x2="52" y2="75" stroke="#4cc9f0" stroke-width="2.5"/>
+        <path d="M45,15 C70,15 100,25 128,55 C100,85 70,95 45,95 C62,72 62,38 45,15 Z"
+              fill="rgba(167,123,255,.10)" stroke="#a77bff" stroke-width="3"/>
+        <circle cx="135" cy="55" r="7" fill="#0b1119" stroke="#a77bff" stroke-width="3"/>
+        <line x1="142" y1="55" x2="180" y2="55" stroke="#ffb547" stroke-width="2.5"/>
+      </svg>
+      <table class="tbl">
+        <thead><tr><th>A</th><th>B</th><th>S</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td><b>1</b></td></tr><tr><td>0</td><td>1</td><td>0</td></tr>
+          <tr><td>1</td><td>0</td><td>0</td></tr><tr><td>1</td><td>1</td><td>0</td></tr>
+        </tbody>
+      </table>
+      <div class="rule">OR <b>inversé</b> : 1 seulement si 0 et 0.</div>
+    </div>
+
+    <div class="gate">
+      <h4>XNOR</h4>
+      <svg viewBox="0 0 200 110" style="max-width:180px">
+        <line x1="16" y1="35" x2="48" y2="35" stroke="#4cc9f0" stroke-width="2.5"/>
+        <line x1="16" y1="75" x2="48" y2="75" stroke="#4cc9f0" stroke-width="2.5"/>
+        <path d="M41,15 C66,15 96,25 124,55 C96,85 66,95 41,95 C58,72 58,38 41,15 Z"
+              fill="rgba(167,123,255,.10)" stroke="#a77bff" stroke-width="3"/>
+        <path d="M33,15 C50,38 50,72 33,95" fill="none" stroke="#a77bff" stroke-width="3"/>
+        <circle cx="131" cy="55" r="7" fill="#0b1119" stroke="#a77bff" stroke-width="3"/>
+        <line x1="138" y1="55" x2="180" y2="55" stroke="#ffb547" stroke-width="2.5"/>
+      </svg>
+      <table class="tbl">
+        <thead><tr><th>A</th><th>B</th><th>S</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>0</td><td><b>1</b></td></tr><tr><td>0</td><td>1</td><td>0</td></tr>
+          <tr><td>1</td><td>0</td><td>0</td></tr><tr><td>1</td><td>1</td><td><b>1</b></td></tr>
+        </tbody>
+      </table>
+      <div class="rule">XOR <b>inversé</b> : 1 si les entrées sont identiques.</div>
+    </div>
+  </div>
+
+  <div class="good" style="margin-top:16px">
+    <b>Le truc à retenir :</b> le <b>petit rond</b> sur la sortie = « inverse tout ». Tu vois un rond,
+    tu prends la table de base et tu retournes chaque valeur. C'est mécanique. 🔁
+  </div>
+</section>
+
+<!-- 4 -->
+<section>
+  <div class="step"><span class="num">04</span><h2>Le simulateur — joue</h2></div>
+  <p class="lead">Clique sur A et B. Les six portes répondent <b>en même temps</b>. 👇</p>
+
+  <div class="card hi">
+    <div class="sim">
+      <button class="swbig" id="swA">ENTRÉE A<span class="state" id="vA">0</span></button>
+      <div style="font-family:var(--mono);color:var(--soft);text-align:center;font-size:12px">+<br>↓</div>
+      <button class="swbig" id="swB">ENTRÉE B<span class="state" id="vB">0</span></button>
+    </div>
+    <div class="outgrid">
+      <div class="outbox"><div class="n">AND</div><div class="v" id="oAND">0</div></div>
+      <div class="outbox"><div class="n">OR</div><div class="v" id="oOR">0</div></div>
+      <div class="outbox"><div class="n">NAND</div><div class="v" id="oNAND">1</div></div>
+      <div class="outbox"><div class="n">NOR</div><div class="v" id="oNOR">1</div></div>
+      <div class="outbox"><div class="n">XOR</div><div class="v" id="oXOR">0</div></div>
+      <div class="outbox"><div class="n">XNOR</div><div class="v" id="oXNOR">1</div></div>
+    </div>
+    <div style="margin-top:16px" id="simtxt" class="readout">
+      A = 0, B = 0 → AND donne 0 (il n'y a pas deux « 1 »), XOR donne 0 (les entrées sont identiques).
+    </div>
+    <p class="note">🎯 Fais 4 essais : (0,0), (0,1), (1,0), (1,1). Si tu prédis la sortie <b>avant</b> de regarder,
+    tu as compris les portes. C'est tout l'exercice.</p>
+  </div>
+</section>
+
+<!-- 5 -->
+<section>
+  <div class="step"><span class="num">05</span><h2>À quoi ça sert vraiment</h2></div>
+  <p class="lead">Ces 7 règles, répétées des <b>milliards</b> de fois, font un ordinateur. Rien de plus. 🤯</p>
+
+  <div class="card">
+    <div class="svgbox">
+      <svg viewBox="0 0 720 200">
+        <g font-family="ui-monospace,monospace" font-size="12" text-anchor="middle">
+          <rect x="20" y="70" width="130" height="60" rx="12" fill="#0f1a26" stroke="#4cc9f0"/>
+          <text x="85" y="105" fill="#4cc9f0">portes</text>
+
+          <rect x="200" y="70" width="130" height="60" rx="12" fill="#0f1a26" stroke="#39e08f"/>
+          <text x="265" y="98" fill="#39e08f">additionneur</text>
+          <text x="265" y="116" fill="#6d809b" font-size="10">des portes ensemble</text>
+
+          <rect x="380" y="70" width="130" height="60" rx="12" fill="#0f1a26" stroke="#ffb547"/>
+          <text x="445" y="98" fill="#ffb547">calcul</text>
+          <text x="445" y="116" fill="#6d809b" font-size="10">ALU, registres</text>
+
+          <rect x="560" y="70" width="140" height="60" rx="12" fill="#0b1a14" stroke="#39e08f" stroke-width="2"/>
+          <text x="630" y="105" fill="#39e08f">processeur</text>
+
+          <g stroke="#3a5170" stroke-width="2" fill="none">
+            <path d="M150,100 H195"/><path d="M330,100 H375"/><path d="M510,100 H555"/>
+          </g>
+          <g fill="#3a5170">
+            <polygon points="195,100 187,96 187,104"/><polygon points="375,100 367,96 367,104"/>
+            <polygon points="555,100 547,96 547,104"/>
+          </g>
+          <text x="360" y="170" fill="#6d809b" font-size="11">de la règle de base au processeur : c'est une question de QUANTITÉ</text>
+        </g>
+      </svg>
+    </div>
+    <table class="tbl" style="font-size:15px">
+      <thead><tr><th>Où</th><th>Ce que font les portes</th></tr></thead>
+      <tbody style="text-align:left">
+        <tr><td><b>Processeur (CPU)</b></td><td>Des millions de portes pour calculer et décider.</td></tr>
+        <tr><td><b>Mémoire (RAM)</b></td><td>Des portes qui se souviennent d'un 0 ou d'un 1 — on verra ça plus tard.</td></tr>
+        <tr><td><b>PlayStation 3</b></td><td>Cell et RSX : des centaines de millions de transistors, donc des portes par paquets.</td></tr>
+        <tr><td><b>ESP32 de RATISS-GRID</b></td><td>Le même principe, en plus petit, pour lire tes capteurs.</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Un transistor = un interrupteur minuscule. Beaucoup de transistors = des portes.
+    Beaucoup de portes = un processeur. Il n'y a <b>pas de magie</b>, juste de la quantité. ⚙️</p>
+  </div>
+</section>
+
+<!-- 6 -->
+<section>
+  <div class="step"><span class="num">06</span><h2>Évaluation</h2></div>
+  <div id="quiz"></div>
+  <div class="readout" style="margin-top:14px">Répondues : <b id="qs">0 / 6</b> — <b id="qok">0</b> justes</div>
+</section>
+
+<footer>
+  RATISS Academy · Leçon 003 — « Les portes logiques » · v1.0 · 03/11/2026<br>
+  Symboles dessinés pour cette leçon (norme CEI/IEEE). Aucune image décorative.<br>
+  Ce sont des circuits <b>numériques</b>, pas analogiques.
+</footer>
+
+</div>
+
+<script>
+/* ---------- SIMULATEUR ---------- */
+(function(){
+  let A=0, B=0;
+  const el=id=>document.getElementById(id);
+  function paint(){
+    el('vA').textContent=A; el('vB').textContent=B;
+    el('swA').classList.toggle('on', A===1);
+    el('swB').classList.toggle('on', B===1);
+    const and=A&B, or=A|B, nand=1-and, nor=1-or, xor=A^B, xnor=1-xor;
+    const set=(id,v)=>{ const e=el(id); e.textContent=v; e.classList.toggle('one', v===1); };
+    set('oAND',and); set('oOR',or); set('oNAND',nand);
+    set('oNOR',nor); set('oXOR',xor); set('oXNOR',xnor);
+    const f=v=>v===1?'1':'0';
+    el('simtxt').innerHTML =
+      'A = '+A+', B = '+B+' → '+
+      'AND <b>'+f(and)+'</b> (il faut deux 1) · '+
+      'OR <b>'+f(or)+'</b> (au moins un 1) · '+
+      'XOR <b>'+f(xor)+'</b> (entrées '+(A===B?'identiques → 0':'différentes → 1')+')';
+  }
+  el('swA').onclick=()=>{ A=A?0:1; paint(); };
+  el('swB').onclick=()=>{ B=B?0:1; paint(); };
+  paint();
+})();
+
+/* ---------- QUIZ ---------- */
+(function(){
+  const Q=[
+    {q:"AND — A = 1, B = 0. Sortie ?", a:["0","1"], g:0,
+     fb:"AND exige les DEUX à 1. Ici B = 0 → sortie 0."},
+    {q:"OR — A = 0, B = 1. Sortie ?", a:["0","1"], g:1,
+     fb:"OR : au moins un 1 suffit. → 1."},
+    {q:"NOT — entrée = 1. Sortie ?", a:["0","1"], g:0,
+     fb:"NOT inverse. 1 → 0."},
+    {q:"XOR — A = 1, B = 1. Sortie ?", a:["0","1"], g:0,
+     fb:"XOR = différentes. Ici identiques → 0. C'est le piège classique."},
+    {q:"Quelle porte donne 1 seulement quand A et B sont identiques ?", a:["XOR","XNOR","NAND"], g:1,
+     fb:"XNOR = XOR inversé, donc 1 quand les entrées sont identiques."},
+    {q:"Sur un symbole de porte, un petit rond à la sortie veut dire…", a:["la sortie est inversée","la porte est cassée","elle a 3 entrées"], g:0,
+     fb:"Le rond = inversion. AND + rond = NAND. OR + rond = NOR."}
+  ];
+  const box=document.getElementById('quiz');
+  let done=0, ok=0;
+  Q.forEach((it,i)=>{
+    const d=document.createElement('div'); d.className='q';
+    const p=document.createElement('p'); p.textContent=(i+1)+'. '+it.q; d.appendChild(p);
+    const fb=document.createElement('div'); fb.className='fb';
+    let locked=false;
+    it.a.forEach((t,ai)=>{
+      const b=document.createElement('button'); b.className='opt'; b.textContent=t;
+      b.onclick=()=>{
+        if(locked) return; locked=true; done++;
+        if(ai===it.g){ b.classList.add('good'); ok++; }
+        else{ b.classList.add('bad'); d.querySelectorAll('.opt')[it.g].classList.add('good'); }
+        fb.textContent=(ai===it.g?'✅ ':'❌ ')+it.fb;
+        document.getElementById('qs').textContent=done+' / 6';
+        document.getElementById('qok').textContent=ok;
+      };
+      d.appendChild(b);
+    });
+    d.appendChild(fb); box.appendChild(d);
+  });
+})();
+</script>
+</body>
+</html>

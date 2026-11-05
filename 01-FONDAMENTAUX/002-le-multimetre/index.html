@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RATISS Academy · Leçon 002 — Le multimètre</title>
+<style>
+  :root{--bg:#0a0e15;--card:#121a26;--card2:#0d141d;--line:#1f2b3d;--txt:#e9f0fa;--dim:#93a6bf;
+        --soft:#6d809b;--neon:#39e08f;--cyan:#4cc9f0;--amber:#ffb547;--red:#ff6b7d;
+        --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font-size:17px;line-height:1.72;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding:0 0 70px;
+    background-image:radial-gradient(800px 400px at 12% -5%,rgba(57,224,143,.08),transparent 62%),
+                     radial-gradient(700px 460px at 92% 0%,rgba(76,201,240,.07),transparent 62%)}
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px}
+  header{padding:40px 0 8px}
+  .brand{font-family:var(--mono);font-size:11.5px;letter-spacing:.28em;color:var(--neon);text-transform:uppercase}
+  h1{font-size:clamp(28px,5vw,44px);line-height:1.1;margin:.3em 0 .2em;letter-spacing:-.025em}
+  h1 small{display:block;font-size:clamp(15px,2.2vw,19px);font-weight:400;color:var(--dim);margin-top:10px;line-height:1.5}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .chip{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--dim);background:#0e1620}
+  .chip.g{color:var(--neon);border-color:rgba(57,224,143,.35)}
+  .chip.a{color:var(--amber);border-color:rgba(255,181,71,.35)}
+  section{margin:40px 0}
+  .step{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+  .num{font-family:var(--mono);font-size:clamp(26px,5vw,40px);color:rgba(57,224,143,.28);font-weight:700;line-height:1}
+  h2{font-size:clamp(20px,3vw,26px);margin:0;letter-spacing:-.015em}
+  .lead{color:var(--dim);margin:.4em 0 1em;font-size:16.5px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.008));
+        border:1px solid var(--line);border-radius:18px;padding:22px}
+  .card+.card{margin-top:16px}
+  .card.hi{border-color:rgba(57,224,143,.32)}
+  p{margin:.6em 0} h3{font-size:16.5px;margin:1.2em 0 .4em} h3:first-child{margin-top:0}
+  ul,ol{padding-left:22px} li{margin:.3em 0}
+  .mono{font-family:var(--mono)}
+  .note{font-size:14.5px;color:var(--soft);border-left:2px solid var(--line);padding-left:14px;margin:.9em 0}
+  .warn{border-left:3px solid var(--red);background:rgba(255,107,125,.07);padding:14px 18px;border-radius:0 14px 14px 0}
+  .good{border-left:3px solid var(--neon);background:rgba(57,224,143,.06);padding:14px 18px;border-radius:0 14px 14px 0}
+  .svgbox{background:#0b1119;border:1px solid var(--line);border-radius:16px;padding:14px;margin:16px 0}
+  svg{display:block;max-width:100%;height:auto;margin:0 auto}
+  .tbl{width:100%;border-collapse:collapse;font-size:15px;margin:12px 0}
+  .tbl th,.tbl td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  .tbl th{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--soft);text-transform:uppercase}
+  .opt{display:block;width:100%;text-align:left;margin:7px 0;font-size:15px;padding:11px 16px;border-radius:12px;
+       cursor:pointer;background:#17222f;color:var(--txt);border:1px solid #27384f;font-family:inherit}
+  .opt:hover{background:#1d2b3c}
+  .opt.good{background:rgba(57,224,143,.15);border-color:var(--neon);color:var(--neon)}
+  .opt.bad{background:rgba(255,107,125,.13);border-color:var(--red);color:var(--red)}
+  .fb{font-size:14.5px;color:var(--dim);margin-top:8px;min-height:22px}
+  .q{border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0;background:var(--card2)}
+  .q p{font-weight:600;margin:0 0 12px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:760px){.grid2,.grid3{grid-template-columns:1fr}}
+  .mini{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .mini h4{margin:0 0 .4em;font-size:15px;color:var(--cyan)}
+  .mini p{font-size:14px;color:var(--dim);margin:.3em 0}
+  .readout{font-family:var(--mono);background:#070c12;border:1px solid var(--line);border-radius:14px;padding:16px 18px;color:var(--dim);font-size:14px}
+  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);font-family:var(--mono);font-size:12px;color:#5a6b83;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">RATISS Academy · Électronique · Leçon 002</div>
+  <h1>Le multimètre 🔧
+    <small>XL830L : les 3 prises, le sélecteur,<br>et quel mode pour quel appareil.</small>
+  </h1>
+  <div class="meta">
+    <span class="chip g">version 1.0</span><span class="chip">03/11/2026</span>
+    <span class="chip">30 min</span><span class="chip a">basé sur tes mesures réelles</span>
+  </div>
+</header>
+
+<!-- 1 -->
+<section>
+  <div class="step"><span class="num">01</span><h2>Ce qu'il fait vraiment</h2></div>
+  <p class="lead">Un multimètre ne répare rien. <b>Il répond à des questions.</b> Et il n'a que 3 questions à te proposer. 👇</p>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 720 240">
+      <g font-family="ui-monospace,monospace" font-size="12">
+        <!-- 3 blocs questions -->
+        <g>
+          <rect x="20" y="30" width="210" height="80" rx="12" fill="#0f1a26" stroke="#27384f"/>
+          <text x="125" y="58" text-anchor="middle" fill="#4cc9f0" font-size="13">« Combien de volts ? »</text>
+          <text x="125" y="82" text-anchor="middle" fill="#e9f0fa">la DIFFÉRENCE</text>
+          <text x="125" y="100" text-anchor="middle" fill="#6d809b">entre deux points</text>
+        </g>
+        <g>
+          <rect x="255" y="30" width="210" height="80" rx="12" fill="#0f1a26" stroke="#27384f"/>
+          <text x="360" y="58" text-anchor="middle" fill="#39e08f" font-size="13">« Combien d'ohms ? »</text>
+          <text x="360" y="82" text-anchor="middle" fill="#e9f0fa">le FREINAGE</text>
+          <text x="360" y="100" text-anchor="middle" fill="#6d809b">d'un composant</text>
+        </g>
+        <g>
+          <rect x="490" y="30" width="210" height="80" rx="12" fill="#0f1a26" stroke="#27384f"/>
+          <text x="595" y="58" text-anchor="middle" fill="#ffb547" font-size="13">« Ça passe ? »</text>
+          <text x="595" y="82" text-anchor="middle" fill="#e9f0fa">le CHEMIN</text>
+          <text x="595" y="100" text-anchor="middle" fill="#6d809b">est-il continu ?</text>
+        </g>
+        <!-- flèches -->
+        <g stroke="#3a5170" stroke-width="2" fill="none">
+          <path d="M125,110 V150 H360"/><path d="M360,110 V150"/><path d="M595,110 V150 H360"/>
+        </g>
+        <rect x="240" y="152" width="240" height="52" rx="12" fill="#0b1a14" stroke="#39e08f"/>
+        <text x="360" y="184" text-anchor="middle" fill="#39e08f" font-size="14">UN SEUL APPAREIL</text>
+      </g>
+    </svg>
+  </div>
+  <div class="good"><b>La règle d'or :</b> avant chaque mesure, <b>dis à voix haute ce que tu attends</b>.
+  Si le chiffre ne correspond pas, ce n'est pas un problème d'appareil — c'est <b>une information</b>. 🧠</div>
+</section>
+
+<!-- 2 -->
+<section>
+  <div class="step"><span class="num">02</span><h2>Les 3 prises — le branchement</h2></div>
+  <p class="lead">Regarde bien cette face avant. <b>90 % des débutants se trompent ici.</b> 👇</p>
+
+  <div class="card hi">
+    <div class="svgbox">
+      <svg viewBox="0 0 720 330">
+        <!-- corps -->
+        <rect x="210" y="20" width="300" height="285" rx="20" fill="#141d29" stroke="#2b3d59" stroke-width="2"/>
+        <!-- écran -->
+        <rect x="245" y="45" width="230" height="60" rx="6" fill="#0a1a12" stroke="#1e3a2c"/>
+        <text x="360" y="85" text-anchor="middle" font-family="ui-monospace,monospace" font-size="30" fill="#39e08f">1.30</text>
+        <text x="490" y="60" text-anchor="end" font-family="ui-monospace,monospace" font-size="11" fill="#6d809b">V⎓</text>
+        <!-- sélecteur -->
+        <circle cx="360" cy="180" r="52" fill="#0f1722" stroke="#3a5170" stroke-width="2"/>
+        <line x1="360" y1="180" x2="360" y2="140" stroke="#ffb547" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="360" cy="180" r="8" fill="#ffb547"/>
+        <text x="360" y="152" text-anchor="middle" font-family="ui-monospace,monospace" font-size="9" fill="#6d809b">2000</text>
+        <!-- 3 prises -->
+        <circle cx="270" cy="272" r="14" fill="#0a0f16" stroke="#ff6b7d" stroke-width="3"/>
+        <circle cx="360" cy="272" r="14" fill="#0a0f16" stroke="#93a6bf" stroke-width="3"/>
+        <circle cx="450" cy="272" r="14" fill="#0a0f16" stroke="#ffb547" stroke-width="3"/>
+        <g font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">
+          <text x="270" y="303" fill="#ff6b7d">10ADC</text>
+          <text x="360" y="303" fill="#93a6bf">COM</text>
+          <text x="450" y="303" fill="#ffb547">VΩmA</text>
+        </g>
+        <!-- annotations -->
+        <g font-family="ui-monospace,monospace" font-size="12">
+          <line x1="110" y1="100" x2="240" y2="70" stroke="#39e08f" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="105" y="98" text-anchor="end" fill="#39e08f">l'écran</text>
+          <line x1="600" y1="180" x2="418" y2="180" stroke="#ffb547" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="608" y="184" fill="#ffb547">le sélecteur</text>
+          <line x1="105" y1="272" x2="252" y2="272" stroke="#ff6b7d" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="100" y="266" text-anchor="end" fill="#ff6b7d">courant fort</text>
+          <text x="100" y="282" text-anchor="end" fill="#6d809b" font-size="10">(on n'y touche pas)</text>
+          <line x1="618" y1="250" x2="468" y2="266" stroke="#93a6bf" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="626" y="248" fill="#93a6bf">fil NOIR</text>
+          <line x1="618" y1="296" x2="468" y2="278" stroke="#ffb547" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="626" y="302" fill="#ffb547">fil ROUGE</text>
+        </g>
+      </svg>
+    </div>
+
+    <table class="tbl">
+      <thead><tr><th>Prise</th><th>Fil</th><th>À quoi elle sert</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">COM</td><td>🔴 non — <b>noir</b></td><td>La référence. Le fil <b>noir</b> y va <b>toujours</b>.</td></tr>
+        <tr><td class="mono">VΩmA</td><td><b>rouge</b></td><td>Tension, résistance, continuité, petits courants. <b>99 % du temps, c'est là.</b></td></tr>
+        <tr><td class="mono">10ADC</td><td>rouge</td><td>Gros courants (10 A). <b>Pas pour toi aujourd'hui.</b></td></tr>
+      </tbody>
+    </table>
+    <div class="warn"><b>⚠️ À vérifier avant CHAQUE mesure :</b> <b>noir dans COM</b>, <b>rouge dans VΩmA</b>.
+    Si c'est inversé, l'écran affichera une valeur <b>négative</b> — ce n'est pas cassé, c'est juste à l'envers.
+    Tu l'as déjà vécu : tes fils étaient inversés au départ. C'est l'erreur n°1, et elle est bénigne. ✅</div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section>
+  <div class="step"><span class="num">03</span><h2>Le sélecteur — les positions</h2></div>
+  <p class="lead">Chaque symbole = une question. Tu n'as besoin que de <b>4 positions</b> pour l'instant.</p>
+
+  <div class="svgbox">
+    <svg viewBox="0 0 720 150">
+      <g font-family="ui-monospace,monospace" text-anchor="middle">
+        <g>
+          <rect x="20" y="25" width="160" height="70" rx="10" fill="#0f1a26" stroke="#4cc9f0" stroke-width="2"/>
+          <text x="100" y="62" font-size="26" fill="#4cc9f0">V⎓</text>
+          <text x="100" y="84" font-size="11" fill="#93a6bf">tension CONTINUE</text>
+          <text x="100" y="122" font-size="10" fill="#6d809b">piles, batteries,</text>
+          <text x="100" y="136" font-size="10" fill="#6d809b">chargeurs, cartes</text>
+        </g>
+        <g>
+          <rect x="190" y="25" width="160" height="70" rx="10" fill="#0f1a26" stroke="#ff6b7d" stroke-width="2"/>
+          <text x="270" y="62" font-size="26" fill="#ff6b7d">V~</text>
+          <text x="270" y="84" font-size="11" fill="#93a6bf">tension ALTERNATIVE</text>
+          <text x="270" y="122" font-size="10" fill="#6d809b">secteur —</text>
+          <text x="270" y="136" font-size="10" fill="#ff6b7d">avec le maître</text>
+        </g>
+        <g>
+          <rect x="360" y="25" width="160" height="70" rx="10" fill="#0f1a26" stroke="#39e08f" stroke-width="2"/>
+          <text x="450" y="62" font-size="26" fill="#39e08f">Ω</text>
+          <text x="450" y="84" font-size="11" fill="#93a6bf">RÉSISTANCE</text>
+          <text x="450" y="122" font-size="10" fill="#6d809b">composant</text>
+          <text x="450" y="136" font-size="10" fill="#6d809b">HORS TENSION</text>
+        </g>
+        <g>
+          <rect x="530" y="25" width="170" height="70" rx="10" fill="#0f1a26" stroke="#ffb547" stroke-width="2"/>
+          <text x="615" y="62" font-size="22" fill="#ffb547">A⎓</text>
+          <text x="615" y="84" font-size="11" fill="#93a6bf">COURANT</text>
+          <text x="615" y="122" font-size="10" fill="#6d809b">en SÉRIE —</text>
+          <text x="615" y="136" font-size="10" fill="#6d809b">plus tard</text>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <div class="card">
+    <h3>Les calibres — pourquoi « 20 » et pas « 2 » ?</h3>
+    <p>Le <b>calibre</b>, c'est la taille du seau dans lequel tu verses la mesure.
+    <b>Il doit être plus grand que ce que tu attends.</b></p>
+    <table class="tbl">
+      <thead><tr><th>Tu mesures…</th><th>Tu attends…</th><th>Tu choisis</th></tr></thead>
+      <tbody>
+        <tr><td>Une pile AAA</td><td>1,5 V</td><td class="mono">2 V ⎓</td></tr>
+        <tr><td>Une pile 9 V</td><td>9 V</td><td class="mono">20 V ⎓</td></tr>
+        <tr><td>Un chargeur USB</td><td>5 V</td><td class="mono">20 V ⎓</td></tr>
+        <tr><td>Une résistance 220 Ω</td><td>~220 Ω</td><td class="mono">2000 Ω</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Si l'écran affiche <span class="mono">1</span> tout seul (ou <span class="mono">OL</span>),
+    c'est « <i>over limit</i> » : <b>le calibre est trop petit</b>. Tu montes d'un cran. Ce n'est pas une panne. 👍</p>
+  </div>
+</section>
+
+<!-- 4 -->
+<section>
+  <div class="step"><span class="num">04</span><h2>Les 3 mesures de base</h2></div>
+  <p class="lead">Trois gestes, trois schémas. Regarde <b>où vont les pointes</b> — c'est ça le vrai savoir. 👇</p>
+
+  <div class="grid3">
+    <div class="mini">
+      <h4>A · Mesurer une pile</h4>
+      <svg viewBox="0 0 220 130">
+        <rect x="60" y="45" width="100" height="40" rx="6" fill="#1a2433" stroke="#4cc9f0" stroke-width="2"/>
+        <rect x="160" y="58" width="12" height="14" rx="2" fill="#4cc9f0"/>
+        <text x="110" y="71" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12" fill="#e9f0fa">1.5 V</text>
+        <line x1="30" y1="30" x2="60" y2="55" stroke="#ff6b7d" stroke-width="3" stroke-linecap="round"/>
+        <line x1="190" y1="30" x2="172" y2="58" stroke="#93a6bf" stroke-width="3" stroke-linecap="round"/>
+        <text x="26" y="22" font-family="ui-monospace,monospace" font-size="10" fill="#ff6b7d">rouge +</text>
+        <text x="196" y="22" font-family="ui-monospace,monospace" font-size="10" fill="#93a6bf" text-anchor="end">noir −</text>
+        <text x="110" y="112" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10" fill="#6d809b">de CHAQUE côté = parallèle</text>
+      </svg>
+      <p><b>Mode :</b> V⎓, calibre au-dessus de la valeur attendue.</p>
+    </div>
+
+    <div class="mini">
+      <h4>B · Mesurer une résistance</h4>
+      <svg viewBox="0 0 220 130">
+        <rect x="70" y="50" width="80" height="30" rx="4" fill="#e9f0fa" stroke="#9fb3cc" stroke-width="2"/>
+        <text x="110" y="70" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#0a1219">220 Ω</text>
+        <line x1="70" y1="65" x2="35" y2="65" stroke="#9fb3cc" stroke-width="3"/>
+        <line x1="150" y1="65" x2="185" y2="65" stroke="#9fb3cc" stroke-width="3"/>
+        <line x1="35" y1="30" x2="35" y2="65" stroke="#ff6b7d" stroke-width="3"/>
+        <line x1="185" y1="30" x2="185" y2="65" stroke="#93a6bf" stroke-width="3"/>
+        <circle cx="35" cy="30" r="4" fill="#ff6b7d"/><circle cx="185" cy="30" r="4" fill="#93a6bf"/>
+        <text x="110" y="112" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10" fill="#ff6b7d">HORS TENSION obligatoire</text>
+      </svg>
+      <p><b>Mode :</b> Ω. Déconnecte au moins une patte du circuit.</p>
+    </div>
+
+    <div class="mini">
+      <h4>C · Vérifier un câble</h4>
+      <svg viewBox="0 0 220 130">
+        <path d="M30,80 Q110,20 190,80" fill="none" stroke="#93a6bf" stroke-width="4"/>
+        <circle cx="30" cy="80" r="6" fill="#ff6b7d"/>
+        <circle cx="190" cy="80" r="6" fill="#93a6bf"/>
+        <line x1="30" y1="50" x2="30" y2="80" stroke="#ff6b7d" stroke-width="3"/>
+        <line x1="190" y1="50" x2="190" y2="80" stroke="#93a6bf" stroke-width="3"/>
+        <text x="110" y="40" text-anchor="middle" font-family="ui-monospace,monospace" font-size="18" fill="#39e08f">🔔 BIP</text>
+        <text x="110" y="112" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10" fill="#6d809b">une pointe à CHAQUE bout</text>
+      </svg>
+      <p><b>Mode :</b> Ω / continuité. Ça bipe = le chemin existe.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>La différence à ne jamais oublier</h3>
+    <table class="tbl">
+      <thead><tr><th>Mesure</th><th>Le multimètre se branche…</th><th>Pourquoi</th></tr></thead>
+      <tbody>
+        <tr><td><b>Tension</b> (V)</td><td><b>EN PARALLÈLE</b> — à côté du composant</td><td>Il compare deux points, il ne coupe rien.</td></tr>
+        <tr><td><b>Courant</b> (A)</td><td><b>EN SÉRIE</b> — dans le chemin, on coupe le fil</td><td>Le courant doit <b>traverser</b> l'appareil.</td></tr>
+      </tbody>
+    </table>
+    <div class="warn"><b>💀 L'erreur qui grille le fusible :</b> ampèremètre <b>en parallèle</b> sur une pile
+    ou une alimentation → court-circuit immédiat. Ça ne pardonne pas, même sur du 5 V.</div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section>
+  <div class="step"><span class="num">05</span><h2>Ta mesure : 1,3 V sur une AAA</h2></div>
+  <p class="lead">Tu as mesuré <b>1,3 V</b> sur une pile annoncée 1,5 V. Voilà ce que ça veut dire — et ce que ça ne veut pas dire. 🎯</p>
+
+  <div class="card hi">
+    <div class="svgbox">
+      <svg viewBox="0 0 720 170">
+        <line x1="60" y1="110" x2="660" y2="110" stroke="#263650" stroke-width="2"/>
+        <line x1="60" y1="110" x2="60" y2="40" stroke="#263650" stroke-width="2"/>
+        <text x="50" y="45" text-anchor="end" font-family="ui-monospace,monospace" font-size="11" fill="#93a6bf">1.5 V</text>
+        <text x="50" y="114" text-anchor="end" font-family="ui-monospace,monospace" font-size="11" fill="#93a6bf">1.2 V</text>
+        <!-- échelle -->
+        <g stroke="#39e08f" stroke-width="3">
+          <line x1="60" y1="110" x2="60" y2="70"/>
+        </g>
+        <!-- jauge -->
+        <rect x="90" y="92" width="520" height="18" rx="9" fill="#0f1a26" stroke="#27384f"/>
+        <rect x="90" y="92" width="300" height="18" rx="9" fill="rgba(255,181,71,.55)"/>
+        <line x1="390" y1="86" x2="390" y2="116" stroke="#ffb547" stroke-width="3"/>
+        <text x="390" y="136" text-anchor="middle" font-family="ui-monospace,monospace" font-size="13" fill="#ffb547">1.3 V — ta mesure</text>
+        <text x="90" y="136" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#6d809b">0 V</text>
+        <text x="610" y="136" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#6d809b">1.5 V</text>
+        <text x="610" y="86" text-anchor="middle" font-family="ui-monospace,monospace" font-size="11" fill="#39e08f">neuve</text>
+      </svg>
+    </div>
+
+    <table class="tbl">
+      <thead><tr><th>Ce qu'on peut dire</th><th>Ce qu'on ne peut PAS dire</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>La pile n'est pas neuve : elle a perdu 0,2 V à vide.</td>
+          <td>Qu'elle est « morte » — une pile peut afficher 1,3 V et s'écrouler dès qu'un appareil tire dessus.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><b>Le vrai test :</b> mesure la pile <b>pendant</b> qu'elle alimente quelque chose (ou juste après avoir
+    branché une petite résistance). Si la tension reste autour de 1,3 V → elle est encore bonne.
+    Si elle <b>chute</b> vers 0,9 V → elle est finie.</p>
+
+    <div class="note">📏 La tension à vide teste le <b>potentiel</b>. La tension en charge teste la <b>capacité réelle</b>.
+    Un réparateur ne juge jamais une batterie sur une seule mesure à vide.</div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section>
+  <div class="step"><span class="num">06</span><h2>Quel mode pour quel appareil</h2></div>
+  <p class="lead">Voilà le tableau à garder sous les yeux. C'est <b>bête et utile</b>. 👇</p>
+
+  <div class="card">
+    <table class="tbl">
+      <thead><tr><th>Appareil / élément</th><th>Mode</th><th>Remarque</th></tr></thead>
+      <tbody>
+        <tr><td>Pile AAA / AA / 9 V</td><td class="mono" style="color:#4cc9f0">V⎓</td><td>calibre au-dessus</td></tr>
+        <tr><td>Batterie de téléphone</td><td class="mono" style="color:#4cc9f0">V⎓</td><td>~3,7 V nominal</td></tr>
+        <tr><td>Chargeur USB, sortie</td><td class="mono" style="color:#4cc9f0">V⎓</td><td>~5 V</td></tr>
+        <tr><td>Prise domestique</td><td class="mono" style="color:#ff6b7d">V~</td><td><b>avec le maître</b></td></tr>
+        <tr><td>Résistance isolée</td><td class="mono" style="color:#39e08f">Ω</td><td>hors tension</td></tr>
+        <tr><td>Câble débranché</td><td class="mono" style="color:#39e08f">Ω / 🔔</td><td>continuité</td></tr>
+        <tr><td>Petit moteur DC</td><td class="mono" style="color:#ffb547">V⎓ / A⎓</td><td>selon le test</td></tr>
+        <tr><td>Carte mère PS3</td><td class="mono" style="color:#ffb547">V⎓ · Ω · 🔔</td><td>selon le diagnostic</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Le cas du chargeur USB — le schéma qui évite le court-circuit</h3>
+    <div class="svgbox">
+      <svg viewBox="0 0 720 200">
+        <rect x="180" y="40" width="360" height="60" rx="8" fill="#e8eef7" stroke="#9fb3cc" stroke-width="2"/>
+        <rect x="200" y="55" width="70" height="30" rx="3" fill="#2a3444"/>
+        <g font-family="ui-monospace,monospace" font-size="11" fill="#0a1219" text-anchor="middle">
+          <text x="215" y="75">1</text><text x="240" y="75">2</text><text x="265" y="75">3</text>
+        </g>
+        <rect x="450" y="55" width="70" height="30" rx="3" fill="#2a3444"/>
+        <text x="485" y="75" font-family="ui-monospace,monospace" font-size="11" fill="#0a1219" text-anchor="middle">4</text>
+        <g font-family="ui-monospace,monospace" font-size="12">
+          <text x="200" y="30" fill="#e9f0fa">Prise USB-A — les 4 contacts</text>
+          <text x="215" y="120" text-anchor="middle" fill="#ff6b7d">VBUS +5V</text>
+          <text x="485" y="120" text-anchor="middle" fill="#93a6bf">GND −</text>
+          <text x="360" y="120" text-anchor="middle" fill="#6d809b">(2 et 3 = données, on n'y touche pas)</text>
+          <line x1="215" y1="92" x2="215" y2="110" stroke="#ff6b7d" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <line x1="485" y1="92" x2="485" y2="110" stroke="#93a6bf" stroke-width="1.5" stroke-dasharray="4 4"/>
+        </g>
+        <rect x="180" y="140" width="360" height="46" rx="10" fill="#2a0f14" stroke="#ff6b7d"/>
+        <text x="360" y="169" text-anchor="middle" font-family="ui-monospace,monospace" font-size="12" fill="#ff6b7d">
+          ne JAMAIS glisser les pointes dans le port</text>
+      </svg>
+    </div>
+    <p><b>La bonne méthode :</b> un <b>adaptateur USB de test</b> (breakout), ou un vieux câble USB coupé dont tu
+    as dénudé le rouge (+5 V) et le noir (GND). Tu mesures sur les fils, pas dans la prise.</p>
+    <table class="tbl">
+      <thead><tr><th>Tu lis</th><th>Ça veut dire</th></tr></thead>
+      <tbody>
+        <tr><td>≈ 5,0 V</td><td>la sortie est là ✅</td></tr>
+        <tr><td>0 V</td><td>rien ne sort, ou mauvais contact</td></tr>
+        <tr><td>valeur négative</td><td>tes pointes sont inversées 🙂</td></tr>
+        <tr><td>très différent de 5 V</td><td>chargeur suspect</td></tr>
+      </tbody>
+    </table>
+    <p class="note">⚠️ 5 V présents ne veut pas dire chargeur en bon état : ça ne prouve rien <b>sous charge</b>.</p>
+  </div>
+</section>
+
+<!-- 7 -->
+<section>
+  <div class="step"><span class="num">07</span><h2>Sécurité</h2></div>
+  <div class="card warn">
+    <ul style="margin:0">
+      <li><b>Le 230 V du secteur :</b> jamais sans ton maître. Même « juste pour voir ».</li>
+      <li><b>Ohmètre :</b> toujours <b>hors tension</b>, sinon mesure fausse et risque pour l'appareil.</li>
+      <li><b>Ampèremètre en parallèle :</b> interdit. Court-circuit.</li>
+      <li><b>Condensateurs :</b> un circuit éteint peut encore être chargé. On décharge avant de toucher.</li>
+      <li><b>PS3 / cartes :</b> on commence par la continuité hors tension. Pas de tension sur le processeur.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 8 -->
+<section>
+  <div class="step"><span class="num">08</span><h2>Évaluation</h2></div>
+  <div id="quiz"></div>
+  <div class="readout" style="margin-top:14px">Répondues : <b id="qs">0 / 5</b> — <b id="qok">0</b> justes</div>
+</section>
+
+<footer>
+  RATISS Academy · Leçon 002 — « Le multimètre » · v1.0 · 03/11/2026<br>
+  Schémas dessinés pour cette leçon. Aucune photo décorative : chaque image explique quelque chose.<br>
+  Simulation ≠ mesure. Le multimètre arbitre.
+</footer>
+
+</div>
+
+<script>
+(function(){
+  const Q=[
+    {q:"Le fil noir va dans quelle prise ?",
+     a:["10ADC","COM","VΩmA"], g:1,
+     fb:"COM, toujours. C'est la référence. Le rouge va dans VΩmA."},
+    {q:"Pour mesurer une pile de 9 V, tu choisis quel calibre ?",
+     a:["2 V","20 V","200 V"], g:1,
+     fb:"Le calibre doit être juste au-dessus de la valeur attendue. 9 V → 20 V."},
+    {q:"Tu mesures une résistance sur une carte encore alimentée. C'est…",
+     a:["correct, c'est plus rapide","faux : hors tension obligatoire","mieux pour la précision"], g:1,
+     fb:"L'ohmmètre injecte son propre courant. Sous tension, la mesure est fausse et l'appareil peut souffrir."},
+    {q:"L'écran affiche « 1 » seul (ou « OL »). Ça veut dire…",
+     a:["le multimètre est cassé","le calibre est trop petit","la pile du multimètre est morte"], g:1,
+     fb:"Over limit : dépasse le calibre. Tu montes d'un cran."},
+    {q:"Ta pile AAA affiche 1,3 V à vide. Peut-on dire qu'elle est morte ?",
+     a:["oui, en dessous de 1,5 V c'est fini","non, il faut la tester en charge","oui, il faut la jeter"], g:1,
+     fb:"La tension à vide ne suffit pas. C'est la chute de tension sous charge qui révèle l'état réel."}
+  ];
+  const box=document.getElementById('quiz');
+  let done=0, ok=0;
+  Q.forEach((it,i)=>{
+    const d=document.createElement('div'); d.className='q';
+    const p=document.createElement('p'); p.textContent=(i+1)+'. '+it.q; d.appendChild(p);
+    const fb=document.createElement('div'); fb.className='fb';
+    let locked=false;
+    it.a.forEach((t,ai)=>{
+      const b=document.createElement('button'); b.className='opt'; b.textContent=t;
+      b.onclick=()=>{
+        if(locked) return; locked=true; done++;
+        if(ai===it.g){ b.classList.add('good'); ok++; }
+        else{ b.classList.add('bad'); d.querySelectorAll('.opt')[it.g].classList.add('good'); }
+        fb.textContent=(ai===it.g?'✅ ':'❌ ')+it.fb;
+        document.getElementById('qs').textContent=done+' / 5';
+        document.getElementById('qok').textContent=ok;
+      };
+      d.appendChild(b);
+    });
+    d.appendChild(fb); box.appendChild(d);
+  });
+})();
+</script>
+</body>
+</html>

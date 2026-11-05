@@ -37,9 +37,9 @@ Une leçon qui saute le 5 ou le 6 ne compte pas.
 | # | Leçon | Statut | Prérequis |
 |---|---|---|---|
 | 001 | Tension, courant, résistance | ✅ v1.0 | aucun |
-| 002 | Circuit ouvert / fermé + continuité (diagnostic au multimètre) | ⬜ après 1ʳᵉ séance d'atelier | 001 |
-| 003 | La résistance : code couleur, valeurs E12, puissance | ⬜ | 001 |
-| 004 | Chute de tension & diviseur de tension | ⬜ | 001, 003 |
+| 002 | **Le multimètre (XL830L)** : prises, sélecteur, 3 mesures, quel mode pour quel appareil | ✅ v1.0 | 001 |
+| 003 | **Les portes logiques** : AND, OR, NOT, XOR (+ NAND, NOR, XNOR) | ✅ v1.0 | aucun |
+| 004 | La résistance : code couleur, valeurs E12, puissance | ⬜ | 001 |
 | 005 | L'électron pour de vrai (et pourquoi l'image de l'eau s'arrête là) | ⬜ | 004 |
 | 006 | Le condensateur : le temps entre dans le circuit | ⬜ | 005 |
 | 007 | La diode et la LED | ⬜ | 004 |
@@ -59,12 +59,15 @@ Il ne se mélange pas à l'électronique.
 - Première leçon prête : `RATISS-ENGLISH/01-NIVEAU-0/E01-hello-alphabet-sons/index.html`
 - Ici, seul le **vocabulaire du travail** est conservé : `GLOSSAIRE-METIER.md` (pas un cours).
 
-## 6. Pilier C puis C++
+## 6. Pilier Logique → C → C++
 
-Démarre quand une notion électro se calcule naturellement (leçon 003, code couleur → petit programme).
+**Décision du 03/11/2026 : pas de Python.** On apprend les **bases logiques** (faites en leçon électro 003),
+puis C et C++ uniquement pour **lire, écrire, corriger et vérifier** du code.
+Toute production passe par **RATISS Framework** comme cadre de contrôle.
 
 | # | Leçon | Lien électro |
 |---|---|---|
+| L0 | **Logique : 0/1, AND, OR, NOT, XOR** | ✅ leçon électro 003 |
 | C01 | Qu'est-ce que programmer ? Un programme = une suite d'ordres | — |
 | C02 | Structure d'un programme C, compilation sous Windows | — |
 | C03 | Variables et types (`int`, `float`) | tension, courant = nombres |

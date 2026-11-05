@@ -1,21 +1,29 @@
-# 💻 Pilier PROGRAMMATION — C d'abord, puis C++
+# 💻 Pilier PROGRAMMATION — logique, puis C, puis C++
 
-Démarre réellement à la leçon électro 003 (code couleur des résistances → premier programme utile).
-Environnement : **Windows**. Compilateur recommandé : **GCC via MSYS2** ou **Dev-C++/Code::Blocks**
-(à trancher à l'installation, pas avant).
+> **Décision du chef (03/11/2026) :** **pas de Python.**
+> On apprend **les bases logiques**, puis C et C++ — uniquement ce qui sert à lire,
+> écrire, corriger et **vérifier** du code. Pas de parcours encyclopédique.
 
-## Programme prévu
-| # | Leçon | Lien avec l'électronique |
+## Pourquoi ce choix
+- Objectif = systèmes embarqués et microcontrôleurs (ESP32, Pico), pas du scripting.
+- C / C++ sont les langages du matériel. On va à l'essentiel.
+- Toute production est encadrée par **RATISS Framework** (audit exécutable, traçabilité,
+  reproductibilité) — le code n'est pas « correct » parce qu'une IA l'affirme.
+
+## Programme
+| # | Étape | Lien avec l'électronique |
 |---|---|---|
-| C01 | Qu'est-ce que programmer ? Un programme = une suite d'ordres | — |
-| C02 | Structure d'un programme C, compilation | — |
-| C03 | Variables et types (`int`, `float`) | U, I, R sont des nombres |
-| C04 | Opérations | **U = R × I** en C |
-| C05 | Conditions | « si U < 2 V → LED éteinte » |
-| C06 | Boucles | moyenner 10 mesures |
-| C07 | Fonctions | `float courant(float u, float r)` |
-| C08 | Tableaux | série de mesures |
-| C09 | Pointeurs | registres, mémoire d'un microcontrôleur |
+| L0 | **Logique** : 0/1, AND, OR, NOT, XOR, tables de vérité | ✅ fait — leçon électro 003 |
+| C01 | Un programme = une suite d'ordres · compiler sous Windows | — |
+| C02 | Variables et types (`int`, `float`, `char`) | U, I, R sont des nombres |
+| C03 | Opérateurs et calculs | **U = R × I** en C |
+| C04 | Conditions `if / else` | « si U < 2 V → LED éteinte » |
+| C05 | Boucles `for`, `while` | moyenner 10 mesures |
+| C06 | Fonctions | `float courant(float u, float r)` |
+| C07 | Tableaux | une série de mesures |
+| C08 | Pointeurs et mémoire | registres d'un microcontrôleur |
+| C09 | Structures | un capteur = une structure |
 | C10 | C++ : classes et objets | un capteur = un objet |
 
-**Étape finale visée** : écrire sur un ESP32 / Raspberry Pi Pico (RATISS-GRID, QPU-AMBIENT).
+⚠️ On n'apprend pas **tout** le langage. On apprend ce qui permet de **comprendre, écrire,
+corriger et vérifier**. Le reste se cherche sur Google quand le besoin arrive.

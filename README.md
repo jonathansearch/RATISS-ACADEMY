@@ -26,7 +26,7 @@ Aucun des trois ne remplace les deux autres.
 1. ⚡ **Électronique & réparation** — *pilier principal*
 2. 🇬🇧 **Anglais** — **vraie formation en anglais**, dans un **dépôt séparé** : `RATISS-ENGLISH`.
    Ici, seulement le vocabulaire du travail : `GLOSSAIRE-METIER.md` (pas un cours).
-3. 💻 **Programmation C puis C++** — démarre quand une notion électro se calcule
+3. 💻 **Logique → C → C++** — **pas de Python** ; uniquement ce qui sert à écrire et vérifier du code
 4. 🖥️ **Conception numérique (KiCad)** — installation d'abord, étude ensuite
 
 **Règle du seul pilier actif** : un seul pilier en avant à la fois. Les autres avancent
@@ -98,7 +98,8 @@ pas de connexion internet requise. Elle doit s'ouvrir sous Windows par double-cl
 | Dépôt local | ✅ créé le 03/11/2026 |
 | Dépôt GitHub `RATISS-ACADEMY` | ⬜ **pas encore poussé** (ne jamais annoncer un push non fait) |
 | Leçon 001 | ✅ v1.1 (ajout : lecture de carte + fiche mémo) |
-| Leçon 002 | ⬜ à écrire après la 1ʳᵉ séance d'atelier |
+| Leçon 002 — Le multimètre | ✅ v1.0 |
+| Leçon 003 — Portes logiques | ✅ v1.0 |
 | Anglais | ➡️ **dépôt séparé `RATISS-ENGLISH`** — E01 ✅ v1.0 |
 | Matériel | multimètre cette semaine · breadboard à acheter |
 
