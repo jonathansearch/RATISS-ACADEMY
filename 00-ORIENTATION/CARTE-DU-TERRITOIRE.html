@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RATISS Academy · La carte du territoire</title>
+<style>
+  :root{--bg:#0a0e15;--card:#121a26;--card2:#0d141d;--line:#1f2b3d;--txt:#e9f0fa;--dim:#93a6bf;
+        --soft:#6d809b;--neon:#39e08f;--cyan:#4cc9f0;--amber:#ffb547;--red:#ff6b7d;--violet:#a77bff;
+        --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font-size:16.5px;line-height:1.7;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding:0 0 70px;
+    background-image:radial-gradient(900px 420px at 10% -5%,rgba(57,224,143,.09),transparent 62%),
+                     radial-gradient(800px 500px at 95% 0%,rgba(76,201,240,.09),transparent 62%)}
+  .wrap{max-width:960px;margin:0 auto;padding:0 18px}
+  header{padding:38px 0 6px}
+  .brand{font-family:var(--mono);font-size:11.5px;letter-spacing:.28em;color:var(--neon);text-transform:uppercase}
+  h1{font-size:clamp(27px,5vw,42px);line-height:1.1;margin:.3em 0 .2em;letter-spacing:-.025em}
+  h1 small{display:block;font-size:clamp(15px,2.2vw,18px);font-weight:400;color:var(--dim);margin-top:10px}
+  section{margin:38px 0}
+  h2{font-size:clamp(19px,3vw,24px);margin:0 0 10px;letter-spacing:-.015em}
+  .lead{color:var(--dim);margin:.3em 0 1em;font-size:16px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.008));
+        border:1px solid var(--line);border-radius:18px;padding:20px}
+  .card+.card{margin-top:14px}
+  .note{font-size:14px;color:var(--soft);border-left:2px solid var(--line);padding-left:14px;margin:.9em 0}
+  .good{border-left:3px solid var(--neon);background:rgba(57,224,143,.06);padding:14px 18px;border-radius:0 14px 14px 0}
+
+  /* 3 piliers */
+  .pillars{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:760px){.pillars{grid-template-columns:1fr}}
+  .pil{background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:16px;position:relative}
+  .pil .ic{font-size:24px}
+  .pil h3{margin:.4em 0 .2em;font-size:16px}
+  .pil p{margin:0;font-size:14px;color:var(--dim)}
+  .pil .need{margin-top:10px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--soft)}
+  .pil.a{border-top:3px solid var(--red)}
+  .pil.b{border-top:3px solid var(--cyan)}
+  .pil.c{border-top:3px solid var(--amber)}
+
+  /* timeline */
+  .tl{position:relative;margin:18px 0 0;padding-left:34px}
+  .tl::before{content:'';position:absolute;left:11px;top:6px;bottom:6px;width:2px;
+    background:linear-gradient(180deg,var(--neon),var(--cyan),var(--violet))}
+  .ms{position:relative;margin-bottom:20px}
+  .ms::before{content:'';position:absolute;left:-29px;top:6px;width:12px;height:12px;border-radius:50%;
+    background:#0a0e15;border:3px solid var(--neon)}
+  .ms.money::before{border-color:var(--amber);box-shadow:0 0 16px -2px var(--amber)}
+  .ms .when{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--neon);text-transform:uppercase}
+  .ms.money .when{color:var(--amber)}
+  .ms h4{margin:2px 0 4px;font-size:16.5px}
+  .ms p{margin:0;font-size:14.5px;color:var(--dim)}
+  .ms .tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:2px 8px;
+    border-radius:99px;border:1px solid currentColor;color:var(--amber);margin-left:8px;vertical-align:middle}
+
+  /* concepts */
+  .concepts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .cc{font-family:var(--mono);font-size:12px;padding:5px 11px;border-radius:99px;
+      background:#0f1a26;border:1px solid #23324a;color:var(--dim)}
+  .cc.done{color:var(--neon);border-color:rgba(57,224,143,.45);background:rgba(57,224,143,.08)}
+
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+  @media(max-width:700px){.stats{grid-template-columns:1fr}}
+  .st{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center}
+  .st .b{font-family:var(--mono);font-size:26px;color:var(--cyan);line-height:1.1}
+  .st .l{font-size:12.5px;color:var(--soft);margin-top:6px}
+  footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);font-family:var(--mono);
+    font-size:11.5px;color:#5a6b83;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">RATISS Academy · Carte du territoire</div>
+  <h1>Le chemin, en entier 🗺️
+    <small>Trois métiers, un squelette, six jalons.<br>Tu es ici : <span style="color:#39e08f">point de départ — jour 3</span>.</small>
+  </h1>
+</header>
+
+<section>
+  <h2>Les trois métiers (qui n'en font qu'un)</h2>
+  <div class="pillars">
+    <div class="pil a">
+      <div class="ic">🔧</div>
+      <h3>Réparation</h3>
+      <p>Chercher <b>où le graphe est coupé</b>. Diagnostic, mesure, remplacement.</p>
+      <div class="need">DONNE : vocabulaire · intuition · argent</div>
+    </div>
+    <div class="pil b">
+      <div class="ic">🧠</div>
+      <h3>Électronique embarquée</h3>
+      <p>Une <b>boucle</b> : un nœud qui mesure → décide → agit.</p>
+      <div class="need">DONNE : le cerveau de tes appareils</div>
+    </div>
+    <div class="pil c">
+      <div class="ic">🟩</div>
+      <h3>PCB</h3>
+      <p>Le <b>même graphe</b>, aplati sur du cuivre.</p>
+      <div class="need">DONNE : tes propres cartes RATISS</div>
+    </div>
+  </div>
+  <div class="good" style="margin-top:16px">
+    <b>Le squelette commun :</b> nœuds · branches · mailles · masse commune · tension · courant.
+    Tu as déjà les 4 premiers grâce à ta leçon 001. Le reste, c'est du vocabulaire qui s'installe.
+  </div>
+</section>
+
+<section>
+  <h2>Les six jalons ⛳</h2>
+  <p class="lead">Pas des dates à tenir coûte que coûte : des <b>portes à franchir</b>. Chacune se voit et se mesure.</p>
+
+  <div class="card">
+    <div class="tl">
+      <div class="ms">
+        <div class="when">Mois 1 – 3</div>
+        <h4>Je ne casse plus rien</h4>
+        <p>Multimètre maîtrisé · souder / dessouder proprement · identifier un composant sur une carte.
+        <b>Preuve :</b> tu fais les 3 mesures de la leçon 002 sans réfléchir.</p>
+      </div>
+
+      <div class="ms">
+        <div class="when">Mois 3 – 6</div>
+        <h4>Je diagnostique seul une panne simple</h4>
+        <p>Connecteur, fusible, soudure froide, piste coupée. <b>Preuve :</b> tu trouves la panne <b>avant</b>
+        que ton maître ne la montre.</p>
+      </div>
+
+      <div class="ms money">
+        <div class="when">Mois 6 – 12 <span class="tag">💰 ARGENT</span></div>
+        <h4>Premières réparations payées</h4>
+        <p>Petites réparations confiées par ton maître. <b>Preuve :</b> un client repart avec un appareil
+        qui fonctionne — et toi avec de l'argent gagné par tes mains.</p>
+      </div>
+
+      <div class="ms">
+        <div class="when">Mois 9 – 15</div>
+        <h4>Mon premier système embarqué</h4>
+        <p>ESP32 : lire un capteur, décider, agir, afficher. <b>Preuve :</b> un RATISS-GRID miniature
+        qui mesure une vraie tension et réagit.</p>
+      </div>
+
+      <div class="ms">
+        <div class="when">Mois 12 – 18</div>
+        <h4>Mon premier PCB</h4>
+        <p>Schéma KiCad → empreintes → routage → fabrication → <b>testé</b>.
+        <b>Preuve :</b> une carte qui revient de Chine et qui fonctionne du premier coup (ou qui rate,
+        et tu sais <b>pourquoi</b>).</p>
+      </div>
+
+      <div class="ms">
+        <div class="when">Mois 18 – 24</div>
+        <h4>Un appareil RATISS, du concept à la mesure</h4>
+        <p>Conçu, fabriqué, mesuré, documenté, reproductible.
+        <b>Preuve :</b> un dépôt GitHub avec le schéma, le PCB, les mesures et un verdict honnête.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="st"><div class="b">1 h / jour</div><div class="l">≈ 500–600 h par an</div></div>
+    <div class="st"><div class="b">2 ans</div><div class="l">≈ 1 000–1 200 h de pratique</div></div>
+    <div class="st"><div class="b">mois 6–12</div><div class="l">premier argent gagné</div></div>
+  </div>
+  <p class="note">Ordres de grandeur, pas une garantie. La variable qui compte n'est pas le talent :
+  c'est <b>la régularité</b> et les <b>heures avec les mains</b>.</p>
+</section>
+
+<section>
+  <h2>Les 20 concepts qui couvrent presque tout 🔑</h2>
+  <div class="card">
+    <div class="concepts">
+      <span class="cc done">masse commune</span>
+      <span class="cc done">tension</span>
+      <span class="cc done">courant</span>
+      <span class="cc done">résistance</span>
+      <span class="cc done">loi d'Ohm</span>
+      <span class="cc done">nœud</span>
+      <span class="cc done">branche</span>
+      <span class="cc done">maille</span>
+      <span class="cc">chute de tension</span>
+      <span class="cc">diviseur</span>
+      <span class="cc">continuité</span>
+      <span class="cc">court-circuit</span>
+      <span class="cc">continu / alternatif</span>
+      <span class="cc">régulateur</span>
+      <span class="cc">découplage</span>
+      <span class="cc">pull-up</span>
+      <span class="cc">seuil logique</span>
+      <span class="cc done">0 / 1</span>
+      <span class="cc">PWM</span>
+      <span class="cc">ADC</span>
+      <span class="cc">I²C / SPI / UART</span>
+      <span class="cc">boîtier / empreinte</span>
+      <span class="cc">plan de masse</span>
+    </div>
+    <p class="note" style="margin-top:16px">🟢 en vert = <b>déjà vus</b> dans tes leçons 001, 002, 003.
+    Tu en es à <b>8 sur 23</b> après trois jours. Et les 15 restants ne s'apprennent pas en les lisant :
+    ils arrivent <b>un par un</b>, quand tu les rencontres sur une vraie carte.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Les trois règles anti-découragement 🛡️</h2>
+  <div class="card">
+    <ol style="margin:0">
+      <li><b>Un couloir étroit.</b> Ne vise pas « tout réparer ». Vise <b>les consoles</b> — c'est ce que
+      ton maître fait. Un couloir étroit se traverse vite ; un champ ouvert ne se traverse jamais.</li>
+      <li><b>Jamais trois piliers en même temps.</b> Réparation → embarqué → PCB. Dans cet ordre.
+      Chaque pilier suivant récolte le précédent.</li>
+      <li><b>Une séance = une mesure notée.</b> Pas « j'ai regardé des vidéos ». Une valeur, écrite
+      dans le journal. C'est ça qui s'accumule, et c'est ça qui fait la différence au mois 12.</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2>Ce que tu ne vois pas quand tu regardes YouTube 👁️</h2>
+  <div class="card">
+    <p>Tu vois quelqu'un qui réussit. Tu ne vois pas :</p>
+    <ul style="color:var(--dim)">
+      <li>les <b>45 minutes</b> qu'il a coupées, où il ne comprenait pas</li>
+      <li>les 500 appareils d'avant ⏳</li>
+      <li>qu'il a souvent <b>commencé à 10 ans</b></li>
+      <li>qu'il a rarement un maître à côté — toi, tu en as un 👨‍🔧</li>
+    </ul>
+    <p class="good" style="margin-bottom:0">Tu ne te compares pas à un réparateur. <b>Tu te compares à un film.</b> 🎥</p>
+  </div>
+</section>
+
+<footer>
+  RATISS Academy · Carte du territoire · v1.0 · 03/11/2026<br>
+  Les durées sont des ordres de grandeur, pas des promesses. La seule variable qui compte : les heures avec les mains.<br>
+  Dans 2 ans, tu auras 20 ans de toute façon. La question est : avec ou sans la compétence.
+</footer>
+
+</div>
+</body>
+</html>
